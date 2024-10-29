@@ -22,14 +22,42 @@ class SimpleGridTest(unittest.TestCase):
         rows, cols = (6, 7)
         self.emptygrid = [["0"]*cols]*rows
 
+
+        self.diagonal1=[
+            ["x","0","0","0","0","0","0"],
+            ["0","x","0","0","0","0","0"],
+            ["0","0","x","0","0","0","0"],
+            ["0","0","0","x","0","0","0"],
+            ["0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0"]]
+        self.diagonal2=[
+            ["0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0"],
+            ["0","0","0","x","0","0","0"],
+            ["0","0","x","0","0","0","0"],
+            ["0","x","0","0","0","0","0"],
+            ["x","0","0","0","0","0","0"]]
+        self.diagonal3=[
+            ["0","0","0","0","0","0","x"],
+            ["0","0","0","0","0","x","0"],
+            ["0","0","0","0","x","0","0"],
+            ["0","0","0","x","0","0","0"],
+            ["0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0"]]
+        self.diagonal4=[
+            ["0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0"],
+            ["0","0","x","0","0","0","0"],
+            ["0","0","0","x","0","0","0"],
+            ["0","0","0","0","x","0","0"],
+            ["0","0","0","0","0","x","0"]]        
         self.horizontalnowin=[
             ["0","0","0","0","0","x","x"],
             ["x","x","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
-            ["0","0","0","0","0","0","0"]]
-        
+            ["0","0","0","0","0","0","0"]]        
         self.horizontalwinx=[
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
@@ -57,7 +85,32 @@ class SimpleGridTest(unittest.TestCase):
             ["o","0","0","0","0","0","0"],
             ["o","0","0","0","0","0","0"],
             ["o","0","0","0","0","0","0"],
-            ["o","0","0","0","0","0","0"]]        
+            ["o","0","0","0","0","0","0"]]
+        self.verticalnowin=[
+            ["0","o","0","0","0","0","0"],
+            ["0","o","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0"],
+            ["o","0","0","0","0","0","0"],
+            ["o","0","0","0","0","0","0"]]
+
+    def test_diag1(self):
+        cfw=CFW.CheckForWin(self.diagonal1)
+        self.assertEqual("x",cfw.checkDiagonally())
+
+    def test_diag2(self):
+        cfw=CFW.CheckForWin(self.diagonal2)
+        self.assertEqual("x",cfw.checkDiagonally())
+
+    def test_diag3(self):
+        cfw=CFW.CheckForWin(self.diagonal3)
+        self.assertEqual("x",cfw.checkDiagonally())
+
+    def test_diag4(self):
+        cfw=CFW.CheckForWin(self.diagonal4)
+        self.assertEqual("x",cfw.checkDiagonally())
+
+# Vertikale Tests        
 
     def test_CheckVerticalLeftWinX(self):
         cfw=CFW.CheckForWin(self.verticalwinx)
@@ -75,6 +128,10 @@ class SimpleGridTest(unittest.TestCase):
         cfw=CFW.CheckForWin(self.horizontalwinx)
         self.assertEqual(False,cfw.checkVertically())          
 
+    def test_CheckVerticalNoWin(self):
+        cfw=CFW.CheckForWin(self.verticalnowin)
+        self.assertEqual(False,cfw.checkVertically())        
+        
 # Horizontale Testcases
     def test_CheckHorizontalNoWin(self):
         cfw=CFW.CheckForWin(self.horizontalnowin)

@@ -14,14 +14,52 @@ __status__ = "Development"
     
 
 class CheckForWin():
-    def __init__(self, grid, wincnt=4, figset=["x","o"],reserved="0"):
+    def __init__(self, grid, wincnt=4, figset=["x","o"],reserved="0",drawretval=False):
         self.grid=grid
         self.wincnt=wincnt
         self.figset=figset
         self.reserved=reserved
+        self.drawretval=drawretval
 
+    def checkDiagonally(self):
+        dcount=[self.reserved,0]
+        for x in range(len(self.grid)):
+            for y in range(len(self.grid[0])):
+                dcount=[self.reserved,0]
+                #Geht durch, bis er ein Element findet
+                if self.grid[x][y] in self.figset:
+                    dcount=[self.grid[x][y],1]
+                                      
+                    print(f"Found {self.grid[x][y]} at {x}|{y}")
+                    dres=self.checkDiagLinePositiv(x,y,dcount)
+                    if dres != self.drawretval:
+                        return dres
+                                
+        return self.drawretval                
 
-    def checkVertically(self,drawretval=False):
+    def checkDiagLinePositiv(self,x,y,dcount):
+
+        #Überprüfen auf OutOfBounds
+        if x+self.wincnt>len(self.grid):
+            return self.drawretval
+        if y+self.wincnt>len(self.grid[0]):
+            return self.drawretval
+        
+        for x_diag, y_diag in zip(range(x+1,x+self.wincnt),range(y+1,y+self.wincnt)):
+            print(x_diag,y_diag,self.grid[x][y])
+            if self.grid[x_diag][y_diag]==dcount[0]:
+                dcount[1]+=1
+                if dcount[1]>=self.wincnt:
+                    return dcount[0]
+                    
+        return self.drawretval  
+    
+
+                    
+                
+            
+
+    def checkVertically(self):
         vcount=[self.reserved,0]
         for y in range(len(self.grid[0])):
             vcount=[self.reserved,0]
@@ -37,11 +75,10 @@ class CheckForWin():
                     else:
                         vcount[0]=self.grid[x][y]
                         vcount[1]=1
-        return drawretval
+        return self.drawretval
             
             
-
-    def checkHorizontally(self,drawretval=False):
+    def checkHorizontally(self):
         hcount=[self.reserved,0]
         for row in self.grid:
             #Leeren, wenn neue Reihe beginnt
@@ -62,5 +99,5 @@ class CheckForWin():
                         else:             
                             hcount[0]=coin
                             hcount[1]=1
-        return drawretval
+        return self.drawretval
 
