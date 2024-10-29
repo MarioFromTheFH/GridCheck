@@ -20,21 +20,46 @@ class CheckForWin():
         self.figset=figset
         self.reserved=reserved
 
+
+    def checkVertically(self,drawretval=False):
+        vcount=[self.reserved,0]
+        for y in range(len(self.grid[0])):
+            vcount=[self.reserved,0]
+            for x in range(len(self.grid)):
+                if self.grid[x][y] == self.reserved:
+                    vcount=[self.reserved,1]
+                    continue
+                elif self.grid[x][y] in self.figset:
+                    if self.grid[x][y] == vcount[0]:
+                        vcount[1]+=1
+                        if vcount[1]>=self.wincnt:
+                            return self.grid[x][y]
+                    else:
+                        vcount[0]=self.grid[x][y]
+                        vcount[1]=1
+        return drawretval
+            
+            
+
     def checkHorizontally(self,drawretval=False):
         hcount=[self.reserved,0]
-        val=0
         for row in self.grid:
+            #Leeren, wenn neue Reihe beginnt
+            hcount=[self.reserved,0] 
             for col in row:
                 for coin in col:
-                    if coin == self.reserved: #Zelle ist leer
+                    #Zelle ist leer
+                    if coin == self.reserved: 
                         hcount=[self.reserved,1]
                         continue
-                    if coin in self.figset:   #Zelle ist dasselbe wie in voriger Zelle
+                    #Zelle ist dasselbe wie in voriger Zelle
+                    elif coin in self.figset:   
                         if coin == hcount[0]:
                             hcount[1]+=1
                             if hcount[1]>=self.wincnt:
                                 return coin
-                        else:             #Zelle hat etwas Anderes
+                        #Zelle hat etwas Anderes   
+                        else:             
                             hcount[0]=coin
                             hcount[1]=1
         return drawretval
