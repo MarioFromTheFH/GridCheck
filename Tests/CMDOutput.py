@@ -25,4 +25,4 @@ class CMDOutput():
                 
             outputstring+="\n"
 
-        print(outputstring)
+        return outputstring
