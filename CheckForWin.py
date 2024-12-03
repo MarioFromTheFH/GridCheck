@@ -11,7 +11,9 @@ __version__ = "0.1"
 __maintainer__ = "Mario Schwaiger"
 __email__ = "s54953@edu.campus02.at"
 __status__ = "Development"
-    
+
+import logging
+from Tests.CMDOutput import CMDOutput as cmd
 
 class CheckForWin():
     def __init__(self, grid, wincnt=4, figset=["x","o"],reserved="0",drawretval=False):
@@ -21,20 +23,26 @@ class CheckForWin():
         self.reserved=reserved
         self.drawretval=drawretval
 
+        logger = logging.getLogger(__name__)
+        logging.basicConfig(level=logging.DEBUG, format='%(message)s')
+
+
     def checkDiagonally(self):
         dcount=[self.reserved,0]
-        for x in range(len(self.grid)):
-            for y in range(len(self.grid[0])):
+        for x in range(len(self.grid[0])):
+            for y in range(len(self.grid)):            
                 dcount=[self.reserved,0]
                 #Geht durch, bis er ein Element findet
-                if self.grid[x][y] in self.figset:
-                    dcount=[self.grid[x][y],1]
+                print(x,y)
+                if self.grid[y][x] in self.figset:
+                    dcount=[self.grid[y][x],1]
                                       
-                    print(f"Found {self.grid[x][y]} at {x}|{y}")
+                    logging.debug(f"Found {self.grid[y][x]} at {x}|{y}")
                     dres=self.checkDiagLinePositiv(x,y,dcount)
                     if dres != self.drawretval:
                         return dres
 
+                    dcount=[self.grid[y][x],1]
                     dres=self.checkDiagLineNegativ(x,y,dcount)
                     if dres != self.drawretval:
                         return dres
@@ -44,23 +52,25 @@ class CheckForWin():
 
 
     def checkDiagLineNegativ(self,x,y,dcount):
+#        import ipdb; ipdb.set_trace()
 #        Überprüfen auf OutOfBounds
-        if x-(self.wincnt-1)<0:
+        if x+(self.wincnt-1)>=len(self.grid[0]):
             return self.drawretval
-        if y+self.wincnt-1>=len(self.grid[0]):
-            return self.drawretval        
+        if y-(self.wincnt-1)<0:
+            return self.drawretval    
 
+#        import ipdb; ipdb.set_trace()
 
-        # from Tests.CMDOutput import CMDOutput as cmd
-        # print(x,y)
-        # print(cmd.doCMDOutput(self.grid))
+        logging.debug(f"x:{x}\ny:{y}")
+        logging.debug(cmd.doCMDOutput(self.grid))
         # import ipdb; ipdb.set_trace()
         for x_diag, y_diag in zip(range(x+1,x+self.wincnt),range(y-1,y-(self.wincnt),-1)):
-            print(x_diag,y_diag,self.grid[x][y])
+            logging.debug(f"x_diag:{x_diag}\ny_diag:{y_diag}\nself.grid[y][x]:{self.grid[y][x]}")
 
-            if self.grid[x_diag][y_diag]==dcount[0]:
+
+            if self.grid[y_diag][x_diag]==dcount[0]:
                 dcount[1]+=1
-                print(dcount[1])
+                logging.debug(dcount[1])
                 if dcount[1]>=self.wincnt:
                     return dcount[0]
                     
