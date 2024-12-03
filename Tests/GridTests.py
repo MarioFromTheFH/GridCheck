@@ -22,7 +22,34 @@ class SimpleGridTest(unittest.TestCase):
         rows, cols = (6, 7)
         self.emptygrid = [["0"]*cols]*rows
 
-
+        self.diagonal1_3=[
+            ["x","0","0","0","0","0","0"],
+            ["0","x","0","0","0","0","0"],
+            ["0","0","x","0","0","0","0"],
+            ["0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0"]]
+        self.diagonal2_3=[
+            ["0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0"],
+            ["0","0","x","0","0","0","0"],
+            ["0","x","0","0","0","0","0"],
+            ["x","0","0","0","0","0","0"]]
+        self.diagonal3_3=[
+            ["0","0","0","0","0","0","x"],
+            ["0","0","0","0","0","x","0"],
+            ["0","0","0","0","x","0","0"],
+            ["0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0"]]
+        self.diagonal4_3=[
+            ["0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0"],
+            ["0","0","0","x","0","0","0"],
+            ["0","0","0","0","x","0","0"],
+            ["0","0","0","0","0","x","0"]] 
         self.diagonal1=[
             ["x","0","0","0","0","0","0"],
             ["0","x","0","0","0","0","0"],
@@ -94,6 +121,23 @@ class SimpleGridTest(unittest.TestCase):
             ["o","0","0","0","0","0","0"],
             ["o","0","0","0","0","0","0"]]
 
+
+    def test_diag1_only3(self):
+        cfw=CFW.CheckForWin(self.diagonal1_3)
+        self.assertEqual(False,cfw.checkDiagonally())
+
+    def test_diag2_only3(self):
+        cfw=CFW.CheckForWin(self.diagonal2_3)
+        self.assertEqual(False,cfw.checkDiagonally())
+
+    def test_diag3_only3(self):
+        cfw=CFW.CheckForWin(self.diagonal3_3)
+        self.assertEqual(False,cfw.checkDiagonally())
+
+    def test_diag4_only3(self):
+        cfw=CFW.CheckForWin(self.diagonal4_3)
+        self.assertEqual(False,cfw.checkDiagonally())
+        
     def test_diag1(self):
         cfw=CFW.CheckForWin(self.diagonal1)
         self.assertEqual("x",cfw.checkDiagonally())

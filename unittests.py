@@ -23,61 +23,32 @@ from os import path
 import os
 import sys
 
-suite = unittest.TestSuite()
-loader = unittest.TestLoader()
 
-
-suite.addTests(loader.loadTestsFromModule(GridTests))
 #suite.addTests(loader.loadTestsFromModule(WeirdGridTests))
 
 if __name__ == '__main__':
+    suite = unittest.TestSuite()
+    loader = unittest.TestLoader()
+    suite.addTests(loader.loadTestsFromModule(GridTests))
 
-    # etd.TESTINGCOLORS = {
-    #     'ExampleTest': TESTINGCOLORSCOLORS['Red'],
-    #     'Tests.MoreTests' : TESTINGCOLORSCOLORS['Green'],
-    # }
+    runner = unittest.TextTestRunner(verbosity=2)
+    result = runner.run(suite)
 
-    # dc = etd.DecoWrapper([ExampleTest,
-    #     MoreTests],
-    #     "test")
+    # Handle and print detailed results
+    if result.errors:
+        print("\n======== Errors ==========")
+        for test, err in result.errors:
+            print(f"In {test}:\n{err}")
 
-    file_and_path = os.path.join(os.getcwd(), "report.txt")
-    f = open(file_and_path, "w+")
-    f.write(str(0))
-    f.close()
-    runner = unittest.TextTestRunner(resultclass=unittest.TestResult)
-    res = runner.run(suite)
-    os.remove(file_and_path)
+    if result.failures:
+        print("\n=========== Failures ============")
+        for test, err in result.failures:
+            print(f"In {test}:\n{err}")
 
-    nr_errors = len(res.errors)
-    nr_failures = len(res.failures)
+    if result.skipped:
+        print("\n=========== Skipped ============")
+        for test, reason in result.skipped:
+            print(f"In {test}:\n{reason}")
 
-    if nr_errors > 0:
-        print("======== Errors ==========")
-        for err, msg in res.errors:
-            print("In ", err, ":\n\n", msg)
-    if nr_failures > 0:
-        print("=========== Failures ============== ")
-        for err, msg in res.failures:
-            print("In ", err, ":\n\n", msg)
-    if len(res.skipped) > 0:
-        print("=========== Skipped ============== ")
-        for err, msg in res.skipped:
-            print("In ", err, ":\n\n", msg)
-
-    # Print summary
-    if nr_errors > 0:
-        print('\n\n')
-        print("Errors in:\n\n")
-        for err, msg in res.errors:
-            print(err, '\n')
-
-    print()
-    if nr_failures > 0:
-        print('\n\n')
-        print("Failures in\n\n")
-        for err, msg in res.failures:
-            print(err, '\n')
-    print()
-
-    sys.exit(nr_errors + nr_failures)
+    # Exit with error count
+    sys.exit(len(result.errors) + len(result.failures))
