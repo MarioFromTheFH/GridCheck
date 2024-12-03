@@ -30,43 +30,80 @@ class CheckForWin():
                 if self.grid[x][y] in self.figset:
                     dcount=[self.grid[x][y],1]
                                       
-#                    print(f"Found {self.grid[x][y]} at {x}|{y}")
+                    print(f"Found {self.grid[x][y]} at {x}|{y}")
                     dres=self.checkDiagLinePositiv(x,y,dcount)
                     if dres != self.drawretval:
                         return dres
 
+                    dres=self.checkDiagLineNegativ(x,y,dcount)
+                    if dres != self.drawretval:
+                        return dres
                     
                                 
         return self.drawretval                
 
+
     def checkDiagLineNegativ(self,x,y,dcount):
-        #Überprüfen auf OutOfBounds
-        if x-self.wincnt<0:
+#        Überprüfen auf OutOfBounds
+        if x-(self.wincnt-1)<0:
             return self.drawretval
-        if y-self.wincnt<0:
-            return self.drawretval
-        
-        for x_diag, y_diag in zip(range(x-self.wincnt,x-1,-1),range(y-1,self.wincnt,-1)):
+        if y+self.wincnt-1>=len(self.grid[0]):
+            return self.drawretval        
+
+
+        # from Tests.CMDOutput import CMDOutput as cmd
+        # print(x,y)
+        # print(cmd.doCMDOutput(self.grid))
+        # import ipdb; ipdb.set_trace()
+        for x_diag, y_diag in zip(range(x+1,x+self.wincnt),range(y-1,y-(self.wincnt),-1)):
             print(x_diag,y_diag,self.grid[x][y])
+
             if self.grid[x_diag][y_diag]==dcount[0]:
                 dcount[1]+=1
+                print(dcount[1])
                 if dcount[1]>=self.wincnt:
                     return dcount[0]
                     
-        return self.drawretval  
+            else:
+                return self.drawretval  
+
+
+    
+ #    def checkDiagLineNegativ(self,x,y,dcount):
+# #        Überprüfen auf OutOfBounds
+#         if x-(self.wincnt-1)<0:
+#             return self.drawretval
+#         if y-(self.wincnt-1)<0:
+#             return self.drawretval
+
+#         # from Tests.CMDOutput import CMDOutput as cmd
+#         # print(x,y)
+#         # print(cmd.doCMDOutput(self.grid))
+#         # import ipdb; ipdb.set_trace()
+#         for x_diag, y_diag in zip(range(x-1,x-(self.wincnt),-1),range(y-1,y-(self.wincnt),-1)):
+#             print(x_diag,y_diag,self.grid[x][y])
+
+#             if self.grid[x_diag][y_diag]==dcount[0]:
+#                 dcount[1]+=1
+#                 print(dcount[1])
+#                 if dcount[1]>=self.wincnt:
+#                     return dcount[0]
+                    
+#             else:
+#                 return self.drawretval  
 
 
 
     
     def checkDiagLinePositiv(self,x,y,dcount):
         #Überprüfen auf OutOfBounds
-        if x+self.wincnt>len(self.grid):
+        if x+self.wincnt-1>=len(self.grid):
             return self.drawretval
-        if y+self.wincnt>len(self.grid[0]):
+        if y+self.wincnt-1>=len(self.grid[0]):
             return self.drawretval
         
         for x_diag, y_diag in zip(range(x+1,x+self.wincnt),range(y+1,y+self.wincnt)):
-            print(x_diag,y_diag,self.grid[x][y])
+#            print(x_diag,y_diag,self.grid[x][y])
             if self.grid[x_diag][y_diag]==dcount[0]:
                 dcount[1]+=1
                 if dcount[1]>=self.wincnt:
