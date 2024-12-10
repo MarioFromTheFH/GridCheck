@@ -12,7 +12,7 @@ __maintainer__ = "Mario Schwaiger"
 __email__ = "s54953@edu.campus02.at"
 __status__ = "Development"
 
-from Tests import GridTests# import SimpleGridTest, WeirdGridTests
+from test import test_grids
 #import EnhancedTestDeco as etd
 #from ETDConstants import TESTINGCOLORSCOLORS
 #import ETDConstants as ehconst
@@ -29,7 +29,7 @@ import sys
 if __name__ == '__main__':
     suite = unittest.TestSuite()
     loader = unittest.TestLoader()
-    suite.addTests(loader.loadTestsFromModule(GridTests))
+    suite.addTests(loader.loadTestsFromModule(test_grids))
 
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
