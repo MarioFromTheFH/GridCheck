@@ -17,7 +17,7 @@ class CMDOutput():
     @staticmethod
     def doCMDOutput(grid):
         outputstring=""
-        for row in grid:
+        for row in reversed(grid):
             outputstring+="|"
             for coin in row:
                 outputstring+=coin

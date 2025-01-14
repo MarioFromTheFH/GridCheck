@@ -139,7 +139,7 @@ class Game():
 
 
     def create_board(self, cols,rows):
-        return [[self.RESERVED for row in range(rows)] for col in range(cols)]
+        return [[self.RESERVED for col in range(cols)] for row in range(rows)]
 
 
     def is_valid_location(self, board, col, row_count):
@@ -162,12 +162,22 @@ class Game():
                 pygame.draw.rect(self.DISPLAYSURF, self.BLUE, (c*self.SPACESIZE, r*self.SPACESIZE+self.SPACESIZE, self.SPACESIZE, self.SPACESIZE))
                 pygame.draw.circle(self.DISPLAYSURF, self.BLACK, (int(c*self.SPACESIZE+self.SPACESIZE/2), int(r*self.SPACESIZE+self.SPACESIZE+self.SPACESIZE/2)), self.RADIUS)
 
-        # for c in range(self.cols):
-        #     for r in range(self.rows):		
-        #         if self.board[r][c] == self.COIN_PLAYER_1:
-        #             pygame.draw.circle(self.DISPLAYSURF, RED, (int(c*SQUARESIZE+SQUARESIZE/2), height-int(r*SQUARESIZE+SQUARESIZE/2)), RADIUS)
-        #         elif board[r][c] == self.COIN_PLAYER_2: 
-        #             pygame.draw.circle(self.DISPLAYSURF, YELLOW, (int(c*SQUARESIZE+SQUARESIZE/2), height-int(r*SQUARESIZE+SQUARESIZE/2)), RADIUS)
+        for c in range(self.cols):
+            for r in range(self.rows):		
+                if self.board[r][c] == self.COIN_PLAYER_1:
+                    self.DISPLAYSURF.blit(self.REDTOKENIMG,(int(c*self.SPACESIZE+self.SPACESIZE/2),self.YMARGIN-int(r*self.SPACESIZE+self.SPACESIZE/2)))
+                    # pygame.draw.circle(self.DISPLAYSURF,
+                    #                    self.RED,
+                    #                    (int(c*self.SPACESIZE+self.SPACESIZE/2),self.YMARGIN-int(r*self.SPACESIZE+self.SPACESIZE/2)),
+                    #                    self.RADIUS)
+                    
+                elif self.board[r][c] == self.COIN_PLAYER_2:
+                    self.DISPLAYSURF.blit(self.BLACKTOKENIMG,(int(c*self.SPACESIZE+self.SPACESIZE/2),self.YMARGIN-int(r*self.SPACESIZE+self.SPACESIZE/2)))
+                    # pygame.draw.circle(self.DISPLAYSURF,
+                    #                    self.YELLOW,
+                    #                    (int(c*self.SPACESIZE+self.SPACESIZE/2),self.YMARGIN-int(r*self.SPACESIZE+self.SPACESIZE/2)),
+                    #                    self.RADIUS)
+                    
         pygame.display.update()
 
 
@@ -180,27 +190,27 @@ class Game():
                     sys.exit()
 
                 if event.type == pygame.MOUSEMOTION:
-                    pygame.draw.rect(self.DISPLAYSURF, self.BLACK, (0,0, self.XMARGIN, self.SPACESIZE))
+                    pygame.draw.rect(self.DISPLAYSURF, self.BLACK, (0,0, self.WINDOWWIDTH, self.SPACESIZE))
                     posx = event.pos[0]
-                    if turn == 0:
+                    if turn % 2 == 0:
                         #pygame.draw.circle(self.DISPLAYSURF, self.RED, (posx, int(self.SPACESIZE/2)), self.RADIUS)
                         self.DISPLAYSURF.blit(self.REDTOKENIMG,(posx,0))
                     else: 
                         #pygame.draw.circle(self.DISPLAYSURF, self.YELLOW, (posx, int(self.SPACESIZE/2)), self.RADIUS)
                         self.DISPLAYSURF.blit(self.BLACKTOKENIMG,(posx,0))
-                    #pygame.display.update()
+                pygame.display.update()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pygame.draw.rect(self.DISPLAYSURF, self.BLACK, (0,0, self.XMARGIN, self.SPACESIZE))
                     #print(event.pos)
                     # Ask for Player 1 Input
-                    if turn == 0:
+                    if turn % 2 == 0:
                         posx = event.pos[0]
                         col = int(math.floor(posx/self.SPACESIZE))
 
                         #import ipdb; ipdb.set_trace()
 
-                        if self.is_valid_location(self.board, col, self.cols):
+                        if self.is_valid_location(self.board, col, self.rows):
                             row = self.get_next_open_row(self.board, col, self.cols)
                             self.drop_piece(row, col, self.COIN_PLAYER_1)
 
@@ -215,7 +225,7 @@ class Game():
                         posx = event.pos[0]
                         col = int(math.floor(posx/self.SPACESIZE))
 
-                        if self.is_valid_location(self.board, col, self.cols):
+                        if self.is_valid_location(self.board, col, self.rows):
                             row = self.get_next_open_row(self.board, col, self.cols)
                             self.drop_piece(row, col, self.COIN_PLAYER_2)
 

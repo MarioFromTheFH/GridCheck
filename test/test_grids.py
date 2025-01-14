@@ -20,7 +20,7 @@ class SimpleGridTest(unittest.TestCase):
 
     def setUp(self):
         rows, cols = (6, 7)
-        self.emptygrid = [["0"]*cols]*rows
+        self.emptygrid = [[self.RESERVED for row in range(rows)] for col in range(cols)]
 
         self.diagonal1_3=[
             ["x","0","0","0","0","0","0"],
