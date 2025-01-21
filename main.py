@@ -6,7 +6,7 @@
 # Created: 29.10.2024 17:50                 #
 #############################################
 __author__ = "Mario Schwaiger"
-__credits__ = ["Mario Schwaiger"]
+__credits__ = ["Mario Schwaiger","Andreas-Mihail Cojoc"]
 __version__ = "0.1"
 __maintainer__ = "Mario Schwaiger"
 __email__ = "s54953@edu.campus02.at"
@@ -18,10 +18,11 @@ import random, copy, pygame
 import math
 from pygame.locals import *
 from viergewinnt.check_for_win import CheckForWin
+from viergewinnt.ai import AIMoves
+from viergewinnt.metagame import Metagame
 from test.cmd_output import CMDOutput as cmdo
 
-class Game():
-
+class Game(Metagame):
     ## Boldly stolen from: https://labex.io/tutorials/python-connect-four-game-human-vs-ai-298858
 
     DIFFICULTY = 2 ## Difficulty level, number of moves the computer can consider
@@ -45,18 +46,6 @@ class Game():
 
     BGCOLOR = BRIGHTBLUE
     TEXTCOLOR = WHITE
-
-    RED = 'red'
-    BLACK = 'black'
-    EMPTY = None
-    HUMAN = 'human'
-    COMPUTER = 'computer'
-
-    COIN_PLAYER_1='x'
-    COIN_PLAYER_2='o'
-    FIGSET=[COIN_PLAYER_1,COIN_PLAYER_2]
-
-    RESERVED="0"
 
     WIN_WAIT_TIME=10000
 
@@ -101,12 +90,6 @@ class Game():
         ## Scale the black chess piece image to SPACESIZE
         self.BLACKTOKENIMG = pygame.transform.smoothscale(self.BLACKTOKENIMG, (self.SPACESIZE, self.SPACESIZE))
 
-        ## Load the chessboard image
-        #self.BOARDIMG = pygame.image.load('images/4rowboard.png')
-
-        ## Scale the chessboard image to SPACESIZE
-        #self.BOARDIMG = pygame.transform.smoothscale(self.BOARDIMG, (self.SPACESIZE, self.SPACESIZE))
-
         ## Load the human winner image
         self.HUMANWINNERIMG ='images/4rowhumanwinner.png'
 
@@ -116,47 +99,20 @@ class Game():
         ## Load the tie image
         self.TIEWINNERIMG = 'images/4rowtie.jpg'
 
-        ## Load the arrow image for user instructions
-        self.ARROWIMG = pygame.image.load('images/4rowarrow.png')
-
-        ## Return a Rect object
-        self.ARROWRECT = self.ARROWIMG.get_rect()
-
-        ## Set the left position of the arrow image
-        self.ARROWRECT.left = self.REDPILERECT.right + 10
-
-        ## Align the arrow image vertically with the red chess piece below it
-        self.ARROWRECT.centery = self.REDPILERECT.centery
-
         self.myfont = pygame.font.SysFont("monospace", 75)
 
         self.board=self.create_board(self.cols,self.rows)
 
-        self.cfw=CheckForWin(wincnt=self.wincnt, figset=self.FIGSET,reserved="0",drawretval=False)
+        self.cfw=CheckForWin(wincnt=self.wincnt, figset=self.FIGSET,reserved=self.RESERVED,drawretval=False)
 
+        self.ai=AIMoves(self.cfw)
 
-    def create_board(self, cols,rows):
-        return [[self.RESERVED for col in range(cols)] for row in range(rows)]
-
-
-    def is_valid_location(self, board, col, row_count):
-        return board[row_count-1][col] == self.RESERVED
-
-    def get_next_open_row(self,board, col, row_count):
-        for r in range(row_count):
-            if board[r][col] == self.RESERVED:
-                return r
-            
-    def drop_piece(self, row, col, piece):
-        print(f"{col}x{row}:{piece}")
-        self.board[row][col] = piece
 
     def neues_fenster(self,image_path,text):
         pygame.display.set_mode((332, 332))  # Neues Fenster mit anderer Größe
         pygame.display.set_caption(text)
         screen = pygame.display.get_surface()
         screen.fill(self.WHITE)
-        print(image_path)
         image=pygame.image.load(image_path)
         screen.blit(image, (0, 0))  # Bild in neues Fenster einfügen
         pygame.display.flip()
@@ -164,10 +120,9 @@ class Game():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    sys.exit()        
+                    sys.exit()    
 
-
-    ## Stolen from: https://github.com/KeithGalli/Connect4-Python/blob/master/connect4.py
+   ## Stolen from: https://github.com/KeithGalli/Connect4-Python/blob/master/connect4.py
     def draw_board(self,board=None):
         for c in range(self.cols):
             for r in range(self.rows):
@@ -181,22 +136,13 @@ class Game():
                 x_pos=int(c*self.SPACESIZE)
                 if self.board[r][c] == self.COIN_PLAYER_1:
                     self.DISPLAYSURF.blit(self.REDTOKENIMG,(x_pos,y_pos))
-
-                    # pygame.draw.circle(self.DISPLAYSURF,
-                    #                    self.RED,
-                    #                    (int(c*self.SPACESIZE+self.SPACESIZE/2),self.YMARGIN-int(r*self.SPACESIZE+self.SPACESIZE/2)),
-                    #                    self.RADIUS)
                     
                 elif self.board[r][c] == self.COIN_PLAYER_2:
                     self.DISPLAYSURF.blit(self.BLACKTOKENIMG,(x_pos,y_pos))
-                    # pygame.draw.circle(self.DISPLAYSURF,
-                    #                    self.YELLOW,
-                    #                    (int(c*self.SPACESIZE+self.SPACESIZE/2),self.YMARGIN-int(r*self.SPACESIZE+self.SPACESIZE/2)),
-                    #                    self.RADIUS)
                     
-        pygame.display.update()
+        pygame.display.update()  
 
-
+                    
     def start(self):
         game_over=False
         turn=0

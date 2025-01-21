@@ -6,7 +6,7 @@
 # Created: 29.10.2024 17:44                 #
 #############################################
 __author__ = "Mario Schwaiger"
-__credits__ = ["Mario Schwaiger"]
+__credits__ = ["Mario Schwaiger","Andreas-Mihail Cojoc"]
 __version__ = "0.1"
 __maintainer__ = "Mario Schwaiger"
 __email__ = "s54953@edu.campus02.at"
@@ -35,6 +35,15 @@ class CheckForWin():
         logger = logging.getLogger(__name__)
         logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 
+    @property
+    def figset(self):
+        return self._figset
+
+    @figset.setter
+    def figset(self,figset):
+        self._figset=figset
+
+    
     def doCheck(self,grid):
         for method in (self.check_horizontally, self.check_vertically, self.check_diagonally):
             result = method(grid)
@@ -48,10 +57,17 @@ class CheckForWin():
             for y in range(len(grid)):  
                 if grid[y][x] == self.reserved:
                     return False
-
-        print("Tie!")
         return True        
 
+    def isValidMove(self, grid, column):
+        ## Judge the validity of a piece's move
+        if column < 0 or column >= (len(grid[0])) or grid[column][0] != self.reserved:
+        ## If the column is less than 0 or greater than BOARDWIDTH, or there is no empty space in the column
+            return False
+            ## Then it is an invalid move, otherwise it is valid
+        return True
+
+    
     def check_diagonally(self,grid):
         """Überprüft das Feld, ob ein Sieger diagonal feststeht
 
