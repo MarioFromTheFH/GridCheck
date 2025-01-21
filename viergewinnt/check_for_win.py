@@ -41,7 +41,16 @@ class CheckForWin():
             if result is not False:  # Prüft, ob der Rückgabewert kein False ist
                 return result
         return False  # Gibt None zurück, wenn alle Methoden False zurückgeben
-        
+
+    def isBoardFull(self,grid):
+        ## If there are no empty spaces in the grid, return True
+        for x in range(len(grid[0])):
+            for y in range(len(grid)):  
+                if grid[y][x] == self.reserved:
+                    return False
+
+        print("Tie!")
+        return True        
 
     def check_diagonally(self,grid):
         """Überprüft das Feld, ob ein Sieger diagonal feststeht

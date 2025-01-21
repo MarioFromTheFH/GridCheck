@@ -39,6 +39,7 @@ class Game():
 
     BLUE = (0,0,255)
     BLACK = (0,0,0)
+    WHITE = (255,255,255)
     RED = (255,0,0)
     YELLOW = (255,255,0)
 
@@ -56,6 +57,8 @@ class Game():
     FIGSET=[COIN_PLAYER_1,COIN_PLAYER_2]
 
     RESERVED="0"
+
+    WIN_WAIT_TIME=10000
 
     def __init__(self,rows,cols,wincnt):
 
@@ -105,19 +108,13 @@ class Game():
         #self.BOARDIMG = pygame.transform.smoothscale(self.BOARDIMG, (self.SPACESIZE, self.SPACESIZE))
 
         ## Load the human winner image
-        self.HUMANWINNERIMG = pygame.image.load('images/4rowhumanwinner.png')
+        self.HUMANWINNERIMG ='images/4rowhumanwinner.png'
 
         ## Load the AI winner image
-        self.COMPUTERWINNERIMG = pygame.image.load('images/4rowcomputerwinner.png')
+        self.COMPUTERWINNERIMG = 'images/4rowcomputerwinner.png'
 
         ## Load the tie image
-        self.TIEWINNERIMG = pygame.image.load('images/4rowtie.jpg')
-
-        ## Return a Rect object
-        self.WINNERRECT = self.HUMANWINNERIMG.get_rect()
-
-        ## Center the winner image on the game window
-        self.WINNERRECT.center = (int(self.WINDOWWIDTH / 2), int(self.WINDOWHEIGHT / 2))
+        self.TIEWINNERIMG = 'images/4rowtie.jpg'
 
         ## Load the arrow image for user instructions
         self.ARROWIMG = pygame.image.load('images/4rowarrow.png')
@@ -152,7 +149,22 @@ class Game():
             
     def drop_piece(self, row, col, piece):
         print(f"{col}x{row}:{piece}")
-        self.board[row][col] = piece                    
+        self.board[row][col] = piece
+
+    def neues_fenster(self,image_path,text):
+        pygame.display.set_mode((332, 332))  # Neues Fenster mit anderer Größe
+        pygame.display.set_caption(text)
+        screen = pygame.display.get_surface()
+        screen.fill(self.WHITE)
+        print(image_path)
+        image=pygame.image.load(image_path)
+        screen.blit(image, (0, 0))  # Bild in neues Fenster einfügen
+        pygame.display.flip()
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()        
 
 
     ## Stolen from: https://github.com/KeithGalli/Connect4-Python/blob/master/connect4.py
@@ -169,10 +181,7 @@ class Game():
                 x_pos=int(c*self.SPACESIZE)
                 if self.board[r][c] == self.COIN_PLAYER_1:
                     self.DISPLAYSURF.blit(self.REDTOKENIMG,(x_pos,y_pos))
-                    print("ymargin: "+str(self.YMARGIN))
-                    print("wheight: "+str(self.WINDOWHEIGHT))
-                    print("y.sp   : "+str(self.YMARGIN-int(r*self.SPACESIZE+self.SPACESIZE/2)))
-                    
+
                     # pygame.draw.circle(self.DISPLAYSURF,
                     #                    self.RED,
                     #                    (int(c*self.SPACESIZE+self.SPACESIZE/2),self.YMARGIN-int(r*self.SPACESIZE+self.SPACESIZE/2)),
@@ -211,6 +220,7 @@ class Game():
                     pygame.draw.rect(self.DISPLAYSURF, self.BLACK, (0,0, self.XMARGIN, self.SPACESIZE))
                     #print(event.pos)
                     # Ask for Player 1 Input
+                    
                     if turn % 2 == 0:
                         posx = event.pos[0]
                         col = int(math.floor(posx/self.SPACESIZE))
@@ -222,9 +232,9 @@ class Game():
                             self.drop_piece(row, col, self.COIN_PLAYER_1)
 
                             if self.cfw.doCheck(self.board)==self.COIN_PLAYER_1:
-                                label = self.myfont.render("Player 1 wins!!", 1, self.RED)
-                                self.DISPLAYSURF.blit(label, (40,10))
+                                self.neues_fenster(self.HUMANWINNERIMG,"Spieler 1 gewinnt")
                                 game_over = True
+                                pygame.time.wait(self.WIN_WAIT_TIME)
 
 
                     # # Ask for Player 2 Input
@@ -237,12 +247,19 @@ class Game():
                             self.drop_piece(row, col, self.COIN_PLAYER_2)
 
                             if self.cfw.doCheck(self.board)==self.COIN_PLAYER_2:
-                                label = self.myfont.render("Player 2 wins!!", 1, self.YELLOW)
-                                self.DISPLAYSURF.blit(label, (40,10))
-                                game_over = True                        
+                                self.neues_fenster(self.COMPUTERWINNERIMG,"Spieler 2 gewinnt")
+                                game_over = True
+                                pygame.time.wait(self.WIN_WAIT_TIME)
 
                     turn+=1
                     print(cmdo.doCMDOutput(self.board))
+
+                    if self.cfw.isBoardFull(self.board):
+                        game_over=True
+                        self.neues_fenster(self.TIEWINNERIMG,"Unentschieden")
+                        pygame.time.wait(self.WIN_WAIT_TIME)
+                        break
+                    
                 self.draw_board()
 
 def main():
@@ -260,7 +277,7 @@ def main():
         print("Both rows, cols, and wincnt must be integers.")
         sys.exit(1)
 
-    assert rows >= wincnt and cols >= wincnt, f'Board must be at least {wincnt}x{wincnt}.'
+    #assert rows >= wincnt and cols >= wincnt, f'Board must be at least {wincnt}x{wincnt}.'
 
     print(f"Rows: {rows}, Cols: {cols}, {wincnt} gewinnt")
 
