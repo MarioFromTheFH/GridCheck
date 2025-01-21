@@ -163,16 +163,23 @@ class Game():
                 pygame.draw.circle(self.DISPLAYSURF, self.BLACK, (int(c*self.SPACESIZE+self.SPACESIZE/2), int(r*self.SPACESIZE+self.SPACESIZE+self.SPACESIZE/2)), self.RADIUS)
 
         for c in range(self.cols):
-            for r in range(self.rows):		
+            for r in range(self.rows):
+                #self.YMARGIN-int(r*self.SPACESIZE+self.SPACESIZE/2))
+                y_pos=int((self.SPACESIZE*self.rows)-r*self.SPACESIZE)
+                x_pos=int(c*self.SPACESIZE)
                 if self.board[r][c] == self.COIN_PLAYER_1:
-                    self.DISPLAYSURF.blit(self.REDTOKENIMG,(int(c*self.SPACESIZE+self.SPACESIZE/2),self.YMARGIN-int(r*self.SPACESIZE+self.SPACESIZE/2)))
+                    self.DISPLAYSURF.blit(self.REDTOKENIMG,(x_pos,y_pos))
+                    print("ymargin: "+str(self.YMARGIN))
+                    print("wheight: "+str(self.WINDOWHEIGHT))
+                    print("y.sp   : "+str(self.YMARGIN-int(r*self.SPACESIZE+self.SPACESIZE/2)))
+                    
                     # pygame.draw.circle(self.DISPLAYSURF,
                     #                    self.RED,
                     #                    (int(c*self.SPACESIZE+self.SPACESIZE/2),self.YMARGIN-int(r*self.SPACESIZE+self.SPACESIZE/2)),
                     #                    self.RADIUS)
                     
                 elif self.board[r][c] == self.COIN_PLAYER_2:
-                    self.DISPLAYSURF.blit(self.BLACKTOKENIMG,(int(c*self.SPACESIZE+self.SPACESIZE/2),self.YMARGIN-int(r*self.SPACESIZE+self.SPACESIZE/2)))
+                    self.DISPLAYSURF.blit(self.BLACKTOKENIMG,(x_pos,y_pos))
                     # pygame.draw.circle(self.DISPLAYSURF,
                     #                    self.YELLOW,
                     #                    (int(c*self.SPACESIZE+self.SPACESIZE/2),self.YMARGIN-int(r*self.SPACESIZE+self.SPACESIZE/2)),
