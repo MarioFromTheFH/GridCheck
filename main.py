@@ -237,6 +237,9 @@ class Game(Metagame):
 
                 if game_over:
                     pygame.draw.rect(self.DISPLAYSURF, self.WHITE, (0,0, self.XMARGIN, self.SPACESIZE))
+                    my_font = pygame.font.SysFont('Comic Sans MS', 30)
+                    text_surface = my_font.render(fensterparameter["text"], False, (0, 0, 0))
+                    self.DISPLAYSURF.blit(text_surface, (0,0))
                     self.draw_board()
                     pygame.time.wait(self.WIN_WAIT_TIME)
                     self.neues_fenster(**fensterparameter)
