@@ -189,6 +189,9 @@ class Game(Metagame):
                             if self.cfw.isBoardFull(self.board):
                                 game_over=True
                                 fensterparameter={"image_path":self.TIEWINNERIMG,"text":"Unentschieden"}
+                        else:#No valid location
+                            continue
+                                
                                 
                         if self.computer_game==1 and not game_over:
                             puttocol=self.ai.get_best_move(self.board,1)
@@ -209,6 +212,14 @@ class Game(Metagame):
                         if self.is_valid_location(self.board, col, self.rows):
                             row = self.get_next_open_row(self.board, col, self.rows)
                             self.drop_piece(row, col, self.COIN_PLAYER_2)
+
+                            if self.cfw.isBoardFull(self.board):
+                                game_over=True
+                                fensterparameter={"image_path":self.TIEWINNERIMG,"text":"Unentschieden"}
+
+                        else:#No valid location
+                            continue
+                                
 
                     if self.cfw.doCheck(self.board)==self.COIN_PLAYER_2:
                         if self.computer_game==1:
