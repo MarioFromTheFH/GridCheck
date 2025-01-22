@@ -31,7 +31,6 @@ class Game(Metagame):
     SPACESIZE = 50 ## Size of the chess pieces
     RADIUS = int(SPACESIZE/2 - 5)
 
-    FPS = 30 ## Screen refresh rate, 30/s
     WINDOWWIDTH = 640  ## Width of the game screen in pixels
     WINDOWHEIGHT = 480 ## Height of the game screen in pixels
 
@@ -41,11 +40,6 @@ class Game(Metagame):
     BLUE = (0,0,255)
     BLACK = (0,0,0)
     WHITE = (255,255,255)
-    RED = (255,0,0)
-    YELLOW = (255,255,0)
-
-    BGCOLOR = BRIGHTBLUE
-    TEXTCOLOR = WHITE
 
     WIN_WAIT_TIME=10000
 
@@ -64,9 +58,6 @@ class Game(Metagame):
         
         ## Initialize pygame modules
         pygame.init()
-
-        ## Create a Clock object
-        self.FPSCLOCK = pygame.time.Clock()
 
         ## Create the game window
         self.DISPLAYSURF = pygame.display.set_mode((self.SPACESIZE*self.cols, self.SPACESIZE*(self.rows+1)))
@@ -99,9 +90,7 @@ class Game(Metagame):
         self.COMPUTERWINNERIMG = 'images/4rowcomputerwinner.png'
 
         ## Load the tie image
-        self.TIEWINNERIMG = 'images/4rowtie.jpg'
-
-        self.myfont = pygame.font.SysFont("monospace", 75)
+        self.TIEWINNERIMG = 'images/4rowtie.jpg'        
 
         self.board=self.create_board(self.cols,self.rows)
 
