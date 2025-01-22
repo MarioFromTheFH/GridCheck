@@ -33,7 +33,7 @@ class CheckForWin():
         self.drawretval=drawretval
 
         logger = logging.getLogger(__name__)
-        logging.basicConfig(level=logging.DEBUG, format='%(message)s')
+        logging.basicConfig(level=logging.WARNING, format='%(message)s')
 
     @property
     def figset(self):
@@ -58,15 +58,6 @@ class CheckForWin():
                 if grid[y][x] == self.reserved:
                     return False
         return True        
-
-    def isValidMove(self, grid, column):
-        ## Judge the validity of a piece's move
-        if column < 0 or column >= (len(grid[0])) or grid[column][0] != self.reserved:
-        ## If the column is less than 0 or greater than BOARDWIDTH, or there is no empty space in the column
-            return False
-            ## Then it is an invalid move, otherwise it is valid
-        return True
-
     
     def check_diagonally(self,grid):
         """Überprüft das Feld, ob ein Sieger diagonal feststeht

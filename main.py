@@ -49,13 +49,15 @@ class Game(Metagame):
 
     WIN_WAIT_TIME=10000
 
-    def __init__(self,rows,cols,wincnt):
+    def __init__(self,rows,cols,wincnt,computer_game):
 
         self.turn=0
 
         self.cols=cols
         self.rows=rows
         self.wincnt=wincnt
+
+        self.computer_game=computer_game
         
         self.XMARGIN = int((self.WINDOWWIDTH - self.cols * self.SPACESIZE) / 2)  ## X-coordinate of the left edge of the grid
         self.YMARGIN = int((self.WINDOWHEIGHT - self.rows * self.SPACESIZE) / 2) ## Y-coordinate of the top edge of the grid
@@ -166,7 +168,7 @@ class Game(Metagame):
                     pygame.draw.rect(self.DISPLAYSURF, self.BLACK, (0,0, self.XMARGIN, self.SPACESIZE))
                     #print(event.pos)
                     # Ask for Player 1 Input
-                    
+                    #print(self.ai.getPotentialMoves(self.board,self.COIN_PLAYER_1,1))
                     if turn % 2 == 0:
                         posx = event.pos[0]
                         col = int(math.floor(posx/self.SPACESIZE))
@@ -181,10 +183,16 @@ class Game(Metagame):
                                 self.neues_fenster(self.HUMANWINNERIMG,"Spieler 1 gewinnt")
                                 game_over = True
                                 pygame.time.wait(self.WIN_WAIT_TIME)
-
+                                
+                        if self.computer_game==1:
+                            puttocol=self.ai.get_best_move(self.board,1)
+                            row = self.get_next_open_row(self.board, puttocol, self.cols)
+                            self.drop_piece(row, puttocol, self.COIN_PLAYER_2)
+                            print(f"Droppend piece to:{row},{puttocol}")
+                            turn+=1
 
                     # # Ask for Player 2 Input
-                    else:				
+                    else:
                         posx = event.pos[0]
                         col = int(math.floor(posx/self.SPACESIZE))
 
@@ -192,10 +200,10 @@ class Game(Metagame):
                             row = self.get_next_open_row(self.board, col, self.cols)
                             self.drop_piece(row, col, self.COIN_PLAYER_2)
 
-                            if self.cfw.doCheck(self.board)==self.COIN_PLAYER_2:
-                                self.neues_fenster(self.COMPUTERWINNERIMG,"Spieler 2 gewinnt")
-                                game_over = True
-                                pygame.time.wait(self.WIN_WAIT_TIME)
+                    if self.cfw.doCheck(self.board)==self.COIN_PLAYER_2:
+                        self.neues_fenster(self.COMPUTERWINNERIMG,"Spieler 2 gewinnt")
+                        game_over = True
+                        pygame.time.wait(self.WIN_WAIT_TIME)
 
                     turn+=1
                     print(cmdo.doCMDOutput(self.board))
@@ -213,21 +221,23 @@ def main():
     default_rows = 7
     default_cols = 6
     default_wincnt = 4
+    computer_game = 1
 
     # Falls eine andere Brettgröße gewünscht ist als der Standard 
     try:
         rows = int(sys.argv[1]) if len(sys.argv) > 1 else default_rows
         cols = int(sys.argv[2]) if len(sys.argv) > 2 else default_cols
         wincnt=int(sys.argv[3]) if len(sys.argv) > 3 else default_wincnt
+        computer_game=int(sys.argv[4]) if len(sys.argv) > 4 else computer_game
     except ValueError:
         print("Both rows, cols, and wincnt must be integers.")
         sys.exit(1)
 
-    #assert rows >= wincnt and cols >= wincnt, f'Board must be at least {wincnt}x{wincnt}.'
+    assert rows >= wincnt and cols >= wincnt, f'Board must be at least {wincnt}x{wincnt}.'
 
     print(f"Rows: {rows}, Cols: {cols}, {wincnt} gewinnt")
 
-    game = Game(rows,cols,wincnt)
+    game = Game(rows,cols,wincnt,computer_game)
     game.start()
         
 
