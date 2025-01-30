@@ -73,29 +73,38 @@ class CheckForWin():
 
         :returns: der Stein, der gewonnen hat, oder self.drawretval falls kein Sieger feststeht
         """
-        
-        dcount=[self.reserved,0]
+
+    def check_diagonal_winner(self, grid):
+        dcount = [self.reserved, 0]  # Speichert das aktuelle Symbol und die Anzahl der aufeinanderfolgenden Vorkommen
+
+        # Iteriert über alle Spalten (x-Koordinate)
         for x in range(len(grid[0])):
-            for y in range(len(grid)):            
-                dcount=[self.reserved,0]
-                #Geht durch, bis er ein Element findet
+            # Iteriert über alle Zeilen (y-Koordinate)
+            for y in range(len(grid)):
+                dcount = [self.reserved, 0]  # Zurücksetzen des Zählers für jede neue Startposition
+
+                # Prüft, ob das aktuelle Feld eine Spielfigur enthält
                 if grid[y][x] in self.figset:
-                    dcount=[grid[y][x],1]
-                                      
-                    logging.debug(f"Found {grid[y][x]} at {x}|{y}")
-                    dres=self.check_diag_line_positiv(grid,x,y,dcount)
-                    if dres != self.drawretval:
+                    dcount = [grid[y][x], 1]  # Speichert das Symbol und setzt den Zähler auf 1
+
+                    logging.debug(f"Found {grid[y][x]} at {x}|{y}")  # Debug-Log für die Position des Symbols
+
+                    # Prüft die diagonale Gewinnbedingung in die positive Richtung (↘)
+                    dres = self.check_diag_line_positiv(grid, x, y, dcount)
+                    if dres != self.drawretval:  # Falls ein Gewinner gefunden wurde
                         return dres
 
-                    dcount=[grid[y][x],1]
-                    dres=self.check_diag_line_negativ(grid,x,y,dcount)
-                    if dres != self.drawretval:
+                    dcount = [grid[y][x], 1]  # Zurücksetzen für die negative Diagonale
+
+                    # Prüft die diagonale Gewinnbedingung in die negative Richtung (↙)
+                    dres = self.check_diag_line_negativ(grid, x, y, dcount)
+                    if dres != self.drawretval:  # Falls ein Gewinner gefunden wurde
                         return dres
-                    
-        return self.drawretval                
+
+        return self.drawretval  # Falls kein Gewinner gefunden wurde, Rückgabewert für Unentschieden oder Fortsetzung
 
 
-    def check_diag_line_negativ(self,grid,x,y,dcount):
+def check_diag_line_negativ(self,grid,x,y,dcount):
 
         """Überprüft einen Stein darauf, ob in eine der Diagonalrichtungen ein Sieg feststeht. In Richtung der x-Achse wird hier nach oben gezählt, in Richtung der y-Achese wird heruntergezählt
 
@@ -134,72 +143,78 @@ class CheckForWin():
         :param dcount: [Stein, Anzahl der gefundenen Steine --> Immer 1]
         :returns: der Stein der gewonnen hat, sonst self.drawretval
         """
-        
-        #Überprüfen auf OutOfBounds
-        if x+self.wincnt-1>=len(grid[0]):
-            return self.drawretval
-        if y+self.wincnt-1>=len(grid):
-            return self.drawretval
-        
-        for x_diag, y_diag in zip(range(x+1,x+self.wincnt),range(y+1,y+self.wincnt)):
-#            print(x_diag,y_diag,self.grid[x][y])
-            if grid[y_diag][x_diag]==dcount[0]:
-                dcount[1]+=1
-                if dcount[1]>=self.wincnt:
-                    return dcount[0]
-                    
-        return self.drawretval  
-    
 
-    def check_vertically(self,grid):
+    def check_diagonal_winner(self, grid, x, y):
+        # Überprüfen, ob die Diagonale über die Spielfeldgrenzen hinausgeht
+        if x + self.wincnt - 1 >= len(grid[0]):  # Prüft, ob die x-Koordinate zu weit nach rechts geht
+            return self.drawretval
+        if y + self.wincnt - 1 >= len(grid):  # Prüft, ob die y-Koordinate zu weit nach unten geht
+            return self.drawretval
+
+        # Iteriere über die diagonalen Positionen nach rechts unten
+        for x_diag, y_diag in zip(range(x + 1, x + self.wincnt), range(y + 1, y + self.wincnt)):
+            # print(x_diag, y_diag, self.grid[x][y])  # Debugging-Zeile (auskommentiert)
+
+            if grid[y_diag][x_diag] == dcount[0]:  # Falls das Symbol mit dem vorherigen übereinstimmt
+                dcount[1] += 1  # Zähler erhöhen
+
+                if dcount[1] >= self.wincnt:  # Falls die Gewinnanzahl erreicht wurde
+                    return dcount[0]  # Gewinner zurückgeben
+
+        return self.drawretval  # Falls kein Gewinner gefunden wurde, Rückgabewert für Unentschieden oder Fortsetzung
+
+
+def check_vertically(self,grid):
         """Überprüft auf einen Sieg durch vertikal gelegte Steine
 
         :returns: der Stein der gewonnen hat, sonst self.drawretval
         """
-        
-        vcount=[self.reserved,0]
+
+    def check_vertical_winner(self, grid):
+        vcount = [self.reserved, 0]  # Speichert das aktuelle Symbol und die Anzahl der aufeinanderfolgenden Vorkommen
+
+        # Iteriere über die Spalten (y-Koordinate)
         for y in range(len(grid[0])):
-            vcount=[self.reserved,0]
+            vcount = [self.reserved, 0]  # Zähler für jede neue Spalte zurücksetzen
+
+            # Iteriere über die Zeilen (x-Koordinate)
             for x in range(len(grid)):
-                if grid[x][y] == self.reserved:
-                    vcount=[self.reserved,1]
-                    continue
-                elif grid[x][y] in self.figset:
-                    if grid[x][y] == vcount[0]:
-                        vcount[1]+=1
-                        if vcount[1]>=self.wincnt:
-                            return grid[x][y]
-                    else:
-                        vcount[0]=grid[x][y]
-                        vcount[1]=1
-        return self.drawretval
-            
-            
+                if grid[x][y] == self.reserved:  # Falls die Zelle leer ist
+                    vcount = [self.reserved, 1]  # Zähler zurücksetzen
+                    continue  # Zum nächsten Element springen
+
+                elif grid[x][y] in self.figset:  # Falls das Symbol eine gültige Spielfigur ist
+                    if grid[x][y] == vcount[0]:  # Falls es mit dem vorherigen Symbol in der Spalte übereinstimmt
+                        vcount[1] += 1  # Zähler erhöhen
+                        if vcount[1] >= self.wincnt:  # Falls die Gewinnanzahl erreicht wurde
+                            return grid[x][y]  # Gewinner zurückgeben
+                    else:  # Falls das Symbol von der vorherigen Zelle abweicht
+                        vcount[0] = grid[x][y]  # Neues Symbol speichern
+                        vcount[1] = 1  # Zähler zurücksetzen
+
+        return self.drawretval  # Falls kein Gewinner gefunden wurde, Rückgabewert für Unentschieden oder Fortsetzung
+
     def check_horizontally(self,grid):
         """Überprüft auf einen Sieg durch horizontal gelegt Steine
 
         :returns: der Stein der gewonnen hat, sonst self.drawretval
         """
-        
-        hcount=[self.reserved,0]
-        for row in grid:
-            #Leeren, wenn neue Reihe beginnt
-            hcount=[self.reserved,0] 
-            for col in row:
-                for coin in col:
-                    #Zelle ist leer
-                    if coin == self.reserved: 
-                        hcount=[self.reserved,1]
-                        continue
-                    #Zelle ist dasselbe wie in voriger Zelle
-                    elif coin in self.figset:   
-                        if coin == hcount[0]:
-                            hcount[1]+=1
-                            if hcount[1]>=self.wincnt:
-                                return coin
-                        #Zelle hat etwas Anderes   
-                        else:             
-                            hcount[0]=coin
-                            hcount[1]=1
-        return self.drawretval
+
+    def check_winner(self, grid):
+        for row in grid:  # Durchläuft jede Zeile im Spielfeld
+            hcount = [self.reserved,
+                      0]  # Speichert das aktuelle Symbol und die Anzahl der aufeinanderfolgenden Vorkommen
+            for coin in row:  # Durchläuft jede Spalte der aktuellen Zeile
+                if coin == self.reserved:  # Falls die Zelle leer ist
+                    hcount = [self.reserved, 1]  # Zähler zurücksetzen
+                elif coin in self.figset:  # Falls das Symbol eine gültige Spielfigur ist
+                    if coin == hcount[0]:  # Falls es mit dem vorherigen Symbol übereinstimmt
+                        hcount[1] += 1  # Zähler erhöhen
+                        if hcount[1] >= self.wincnt:  # Falls die Gewinnanzahl erreicht wurde
+                            return coin  # Gewinner zurückgeben
+                    else:  # Falls das Symbol von der vorherigen Zelle abweicht
+                        hcount[0] = coin  # Neues Symbol speichern
+                        hcount[1] = 1  # Zähler zurücksetzen
+        return self.drawretval  # Falls kein Gewinner gefunden wurde, Rückgabewert für Unentschieden oder Fortsetzung
+
 
