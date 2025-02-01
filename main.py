@@ -31,7 +31,6 @@ class Game(Metagame):
     SPACESIZE = 50 ## Size of the chess pieces
     RADIUS = int(SPACESIZE/2 - 5)
 
-    FPS = 30 ## Screen refresh rate, 30/s
     WINDOWWIDTH = 640  ## Width of the game screen in pixels
     WINDOWHEIGHT = 480 ## Height of the game screen in pixels
 
@@ -41,30 +40,24 @@ class Game(Metagame):
     BLUE = (0,0,255)
     BLACK = (0,0,0)
     WHITE = (255,255,255)
-    RED = (255,0,0)
-    YELLOW = (255,255,0)
-
-    BGCOLOR = BRIGHTBLUE
-    TEXTCOLOR = WHITE
 
     WIN_WAIT_TIME=10000
 
-    def __init__(self,rows,cols,wincnt):
+    def __init__(self,rows,cols,wincnt,computer_game):
 
         self.turn=0
 
         self.cols=cols
         self.rows=rows
         self.wincnt=wincnt
+
+        self.computer_game=computer_game
         
         self.XMARGIN = int((self.WINDOWWIDTH - self.cols * self.SPACESIZE) / 2)  ## X-coordinate of the left edge of the grid
         self.YMARGIN = int((self.WINDOWHEIGHT - self.rows * self.SPACESIZE) / 2) ## Y-coordinate of the top edge of the grid
         
         ## Initialize pygame modules
         pygame.init()
-
-        ## Create a Clock object
-        self.FPSCLOCK = pygame.time.Clock()
 
         ## Create the game window
         self.DISPLAYSURF = pygame.display.set_mode((self.SPACESIZE*self.cols, self.SPACESIZE*(self.rows+1)))
@@ -97,9 +90,7 @@ class Game(Metagame):
         self.COMPUTERWINNERIMG = 'images/4rowcomputerwinner.png'
 
         ## Load the tie image
-        self.TIEWINNERIMG = 'images/4rowtie.jpg'
-
-        self.myfont = pygame.font.SysFont("monospace", 75)
+        self.TIEWINNERIMG = 'images/4rowtie.jpg'        
 
         self.board=self.create_board(self.cols,self.rows)
 
@@ -123,7 +114,8 @@ class Game(Metagame):
                     sys.exit()    
 
    ## Stolen from: https://github.com/KeithGalli/Connect4-Python/blob/master/connect4.py
-    def draw_board(self,board=None):
+    def draw_board(self):
+        
         for c in range(self.cols):
             for r in range(self.rows):
                 pygame.draw.rect(self.DISPLAYSURF, self.BLUE, (c*self.SPACESIZE, r*self.SPACESIZE+self.SPACESIZE, self.SPACESIZE, self.SPACESIZE))
@@ -146,6 +138,7 @@ class Game(Metagame):
     def start(self):
         game_over=False
         turn=0
+        fensterparameter={}
         while(not game_over):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -166,7 +159,7 @@ class Game(Metagame):
                     pygame.draw.rect(self.DISPLAYSURF, self.BLACK, (0,0, self.XMARGIN, self.SPACESIZE))
                     #print(event.pos)
                     # Ask for Player 1 Input
-                    
+                    #print(self.ai.getPotentialMoves(self.board,self.COIN_PLAYER_1,1))
                     if turn % 2 == 0:
                         posx = event.pos[0]
                         col = int(math.floor(posx/self.SPACESIZE))
@@ -174,38 +167,72 @@ class Game(Metagame):
                         #import ipdb; ipdb.set_trace()
 
                         if self.is_valid_location(self.board, col, self.rows):
-                            row = self.get_next_open_row(self.board, col, self.cols)
+                            row = self.get_next_open_row(self.board, col, self.rows)
                             self.drop_piece(row, col, self.COIN_PLAYER_1)
 
                             if self.cfw.doCheck(self.board)==self.COIN_PLAYER_1:
-                                self.neues_fenster(self.HUMANWINNERIMG,"Spieler 1 gewinnt")
+                                fensterparameter={"image_path":self.HUMANWINNERIMG,"text":"Spieler 1 gewinnt"}                            
                                 game_over = True
-                                pygame.time.wait(self.WIN_WAIT_TIME)
+                                #pygame.time.wait(self.WIN_WAIT_TIME)
 
+                            if self.cfw.isBoardFull(self.board):
+                                game_over=True
+                                fensterparameter={"image_path":self.TIEWINNERIMG,"text":"Unentschieden"}
+                        else:#No valid location
+                            continue
+                                
+                                
+                        if self.computer_game==1 and not game_over:
+                            puttocol=self.ai.get_best_move(self.board,1)
+                            row = self.get_next_open_row(self.board, puttocol, self.rows)
+                            self.drop_piece(row, puttocol, self.COIN_PLAYER_2)
+                            print(f"Droppend piece to:{row},{puttocol}")
+                            turn+=1
+
+                            if self.cfw.isBoardFull(self.board):
+                                game_over=True
+                                fensterparameter={"image_path":self.TIEWINNERIMG,"text":"Unentschieden"}
 
                     # # Ask for Player 2 Input
-                    else:				
+                    else:
                         posx = event.pos[0]
                         col = int(math.floor(posx/self.SPACESIZE))
 
                         if self.is_valid_location(self.board, col, self.rows):
-                            row = self.get_next_open_row(self.board, col, self.cols)
+                            row = self.get_next_open_row(self.board, col, self.rows)
                             self.drop_piece(row, col, self.COIN_PLAYER_2)
 
-                            if self.cfw.doCheck(self.board)==self.COIN_PLAYER_2:
-                                self.neues_fenster(self.COMPUTERWINNERIMG,"Spieler 2 gewinnt")
-                                game_over = True
-                                pygame.time.wait(self.WIN_WAIT_TIME)
+                            if self.cfw.isBoardFull(self.board):
+                                game_over=True
+                                fensterparameter={"image_path":self.TIEWINNERIMG,"text":"Unentschieden"}
+
+                        else:#No valid location
+                            continue
+                                
+
+                    if self.cfw.doCheck(self.board)==self.COIN_PLAYER_2:
+                        if self.computer_game==1:
+                            fensterparameter={"image_path":self.COMPUTERWINNERIMG,"text":"Computergegner gewinnt"}
+                        else:
+                            fensterparameter={"image_path":self.COMPUTERWINNERIMG,"text":"Spieler 2 gewinnt"}
+
+                        game_over = True
+                        #pygame.time.wait(self.WIN_WAIT_TIME)
 
                     turn+=1
                     print(cmdo.doCMDOutput(self.board))
-
-                    if self.cfw.isBoardFull(self.board):
-                        game_over=True
-                        self.neues_fenster(self.TIEWINNERIMG,"Unentschieden")
-                        pygame.time.wait(self.WIN_WAIT_TIME)
-                        break
                     
+                        #pygame.time.wait(self.WIN_WAIT_TIME)
+
+                if game_over:
+                    pygame.draw.rect(self.DISPLAYSURF, self.WHITE, (0,0, self.XMARGIN, self.SPACESIZE))
+                    my_font = pygame.font.SysFont('Comic Sans MS', 30)
+                    text_surface = my_font.render(fensterparameter["text"], False, (0, 0, 0))
+                    self.DISPLAYSURF.blit(text_surface, (0,0))
+                    self.draw_board()
+                    pygame.time.wait(self.WIN_WAIT_TIME)
+                    self.neues_fenster(**fensterparameter)
+                
                 self.draw_board()
 
 def main():
@@ -213,12 +240,14 @@ def main():
     default_rows = 7
     default_cols = 6
     default_wincnt = 4
+    computer_game = 1
 
     # Falls eine andere Brettgröße gewünscht ist als der Standard 
     try:
         rows = int(sys.argv[1]) if len(sys.argv) > 1 else default_rows
         cols = int(sys.argv[2]) if len(sys.argv) > 2 else default_cols
         wincnt=int(sys.argv[3]) if len(sys.argv) > 3 else default_wincnt
+        computer_game=int(sys.argv[4]) if len(sys.argv) > 4 else computer_game
     except ValueError:
         print("Both rows, cols, and wincnt must be integers.")
         sys.exit(1)
@@ -227,7 +256,7 @@ def main():
 
     print(f"Rows: {rows}, Cols: {cols}, {wincnt} gewinnt")
 
-    game = Game(rows,cols,wincnt)
+    game = Game(rows,cols,wincnt,computer_game)
     game.start()
         
 
