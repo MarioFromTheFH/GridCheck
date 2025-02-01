@@ -1,9 +1,9 @@
-#Antipatterns
+# Antipatterns
 
 Programmierpatterns sind langweilig. Viel interessanter sind Antipatterns, die entweder bei Verwendung korrekter Patterns im falschen Kontext entstehen oder passieren, wenn der Programmierer an seine fachlichen Grenzen stößt.
 Das Resultat ist ähnlich: Am Ende ergeben sich eher suboptimale Konsequenzen.
 
-##Golden Hammer/Law of the Instrument/Maslow's Hammer
+## Golden Hammer/Law of the Instrument/Maslow's Hammer
 
 Ist ein sehr spannendes Antipattern, das sich an ein Zitat von Abraham Maslow anleht: "Wenn dein einziges Werkzeug ein Hammer ist, sieht jedes Problem wie ein Nagel aus".
 
@@ -16,7 +16,7 @@ Ebenso wird heute der objektorientierte Ansatz oftmals als der einzig Richtige d
 
 Ein anderes Beispiel ist die eingangs erwähnte Fokussierung auf ein einziges Produkt. In der Literatur wird gerne eine Datenbank gewählt. Es kann natürlich vorkommen, dass anstatt sich mit der Architektur eines Projekts auseinanderzusetzen lieber auf bestehende Strukturen einer bereits existierenden, zugekauften Lösung zurückgegriffen wird. Die kann dann zu Problemen führen, wenn man seine Produkte modernisieren möchte, in zu vielen Fällen jedoch auf Drittlösungen gesetzt wird, die nicht ersetzbar sind.
 
-##Poltergeist/Gypsy/Gypsy Wagon
+## Poltergeist/Gypsy/Gypsy Wagon
 
 Poltergeister sind typischweise sehr kurzlebige, meistens zustandslose Objekte die nichts Anderes machen, als andere Methoden oder Prozesse zu starten, relativ wenig selbst tun, damit meist nur eine Sache implementiert haben und damit meistens nur Ressourcen verbrennen. Das können auch transiente Datenklassen sein.
 
