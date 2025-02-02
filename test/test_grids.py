@@ -16,216 +16,193 @@ import unittest
 from .cmd_output import CMDOutput
 import viergewinnt.check_for_win as CFW
 
-import unittest  # Importiert das Unittest-Modul für das Testen von Code
-import CFW  # Importiert das Modul, das die Klasse `CheckForWin` enthält
-
-
-import unittest
-import CFW  # Assuming CFW is a module that contains CheckForWin class for checking wins in the grid.
-
 class SimpleGridTest(unittest.TestCase):
-    # This method runs before each test to set up the grid scenarios
+
     def setUp(self):
         rows, cols = (6, 7)
         self.emptygrid = [[self.RESERVED for row in range(rows)] for col in range(cols)]
-        # Diagonal grid setups
-        self.diagonal1_3 = [
+
+        self.diagonal1_3=[
             ["x","0","0","0","0","0","0"],
             ["0","x","0","0","0","0","0"],
             ["0","0","x","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
-            ["0","0","0","0","0","0","0"]
-        ]
-        self.diagonal2_3 = [
+            ["0","0","0","0","0","0","0"]]
+        self.diagonal2_3=[
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","x","0","0","0","0"],
             ["0","x","0","0","0","0","0"],
-            ["x","0","0","0","0","0","0"]
-        ]
-        self.diagonal3_3 = [
+            ["x","0","0","0","0","0","0"]]
+        self.diagonal3_3=[
             ["0","0","0","0","0","0","x"],
             ["0","0","0","0","0","x","0"],
             ["0","0","0","0","x","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
-            ["0","0","0","0","0","0","0"]
-        ]
-        self.diagonal4_3 = [
+            ["0","0","0","0","0","0","0"]]
+        self.diagonal4_3=[
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","x","0","0","0"],
             ["0","0","0","0","x","0","0"],
-            ["0","0","0","0","0","x","0"]
-        ]
-        # Diagonal win setups
-        self.diagonal1 = [
+            ["0","0","0","0","0","x","0"]] 
+        self.diagonal1=[
             ["x","0","0","0","0","0","0"],
             ["0","x","0","0","0","0","0"],
             ["0","0","x","0","0","0","0"],
             ["0","0","0","x","0","0","0"],
             ["0","0","0","0","0","0","0"],
-            ["0","0","0","0","0","0","0"]
-        ]
-        self.diagonal2 = [
+            ["0","0","0","0","0","0","0"]]
+        self.diagonal2=[
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","x","0","0","0"],
             ["0","0","x","0","0","0","0"],
             ["0","x","0","0","0","0","0"],
-            ["x","0","0","0","0","0","0"]
-        ]
-        self.diagonal3 = [
+            ["x","0","0","0","0","0","0"]]
+        self.diagonal3=[
             ["0","0","0","0","0","0","x"],
             ["0","0","0","0","0","x","0"],
             ["0","0","0","0","x","0","0"],
             ["0","0","0","x","0","0","0"],
             ["0","0","0","0","0","0","0"],
-            ["0","0","0","0","0","0","0"]
-        ]
-        self.diagonal4 = [
+            ["0","0","0","0","0","0","0"]]
+        self.diagonal4=[
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","x","0","0","0","0"],
             ["0","0","0","x","0","0","0"],
             ["0","0","0","0","x","0","0"],
-            ["0","0","0","0","0","x","0"]
-        ]
-        # Horizontal grid setups
-        self.horizontalnowin = [
+            ["0","0","0","0","0","x","0"]]        
+        self.horizontalnowin=[
             ["0","0","0","0","0","x","x"],
             ["x","x","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
-            ["0","0","0","0","0","0","0"]
-        ]
-        self.horizontalwinx = [
+            ["0","0","0","0","0","0","0"]]        
+        self.horizontalwinx=[
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
-            ["x","x","x","x","0","0","0"]
-        ]
-        self.horizontalwino = [
+            ["x","x","x","x","0","0","0"]]
+        self.horizontalwino=[
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
-            ["o","o","o","o","0","0","0"]
-        ]
-        # Vertical grid setups
-        self.verticalwinx = [
+            ["o","o","o","o","0","0","0"]]
+        self.verticalwinx=[
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["x","0","0","0","0","0","0"],
             ["x","0","0","0","0","0","0"],
             ["x","0","0","0","0","0","0"],
-            ["x","0","0","0","0","0","0"]
-        ]
-        self.verticalwino = [
+            ["x","0","0","0","0","0","0"]]
+        self.verticalwino=[
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["o","0","0","0","0","0","0"],
             ["o","0","0","0","0","0","0"],
             ["o","0","0","0","0","0","0"],
-            ["o","0","0","0","0","0","0"]
-        ]
-        self.verticalnowin = [
+            ["o","0","0","0","0","0","0"]]
+        self.verticalnowin=[
             ["0","o","0","0","0","0","0"],
             ["0","o","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0"],
             ["o","0","0","0","0","0","0"],
-            ["o","0","0","0","0","0","0"]
-        ]
+            ["o","0","0","0","0","0","0"]]
 
-    # Diagonal test cases
+
     def test_diag1_only3(self):
-        cfw = CFW.CheckForWin(self.diagonal1_3)
-        self.assertEqual(False, cfw.check_diagonally())
+        cfw=CFW.CheckForWin(self.diagonal1_3)
+        self.assertEqual(False,cfw.check_diagonally())
 
     def test_diag2_only3(self):
-        cfw = CFW.CheckForWin(self.diagonal2_3)
-        self.assertEqual(False, cfw.check_diagonally())
+        cfw=CFW.CheckForWin(self.diagonal2_3)
+        self.assertEqual(False,cfw.check_diagonally())
 
     def test_diag3_only3(self):
-        cfw = CFW.CheckForWin(self.diagonal3_3)
-        self.assertEqual(False, cfw.check_diagonally())
+        cfw=CFW.CheckForWin(self.diagonal3_3)
+        self.assertEqual(False,cfw.check_diagonally())
 
     def test_diag4_only3(self):
-        cfw = CFW.CheckForWin(self.diagonal4_3)
-        self.assertEqual(False, cfw.check_diagonally())
-
+        cfw=CFW.CheckForWin(self.diagonal4_3)
+        self.assertEqual(False,cfw.check_diagonally())
+        
     def test_diag1(self):
-        cfw = CFW.CheckForWin(self.diagonal1)
-        self.assertEqual("x", cfw.check_diagonally())
+        cfw=CFW.CheckForWin(self.diagonal1)
+        self.assertEqual("x",cfw.check_diagonally())
 
     def test_diag2(self):
-        cfw = CFW.CheckForWin(self.diagonal2)
-        self.assertEqual("x", cfw.check_diagonally())
+        cfw=CFW.CheckForWin(self.diagonal2)
+        self.assertEqual("x",cfw.check_diagonally())
 
     def test_diag3(self):
-        cfw = CFW.CheckForWin(self.diagonal3)
-        self.assertEqual("x", cfw.check_diagonally())
+        cfw=CFW.CheckForWin(self.diagonal3)
+        self.assertEqual("x",cfw.check_diagonally())
 
     def test_diag4(self):
-        cfw = CFW.CheckForWin(self.diagonal4)
-        self.assertEqual("x", cfw.check_diagonally())
+        cfw=CFW.CheckForWin(self.diagonal4)
+        self.assertEqual("x",cfw.check_diagonally())
 
-    # Vertical Test Cases
+# Vertikale Tests        
+
     def test_CheckVerticalLeftWinX(self):
-        cfw = CFW.CheckForWin(self.verticalwinx)
-        self.assertEqual("x", cfw.check_vertically())
+        cfw=CFW.CheckForWin(self.verticalwinx)
+        self.assertEqual("x",cfw.check_vertically())
 
     def test_CheckVerticalLeftWinO(self):
-        cfw = CFW.CheckForWin(self.verticalwino)
-        self.assertEqual("o", cfw.check_vertically())
+        cfw=CFW.CheckForWin(self.verticalwino)
+        self.assertEqual("o",cfw.check_vertically())        
 
     def test_CheckVerticalDraw(self):
-        cfw = CFW.CheckForWin(self.emptygrid)
-        self.assertEqual(False, cfw.check_vertically())
+        cfw=CFW.CheckForWin(self.emptygrid)
+        self.assertEqual(False,cfw.check_vertically())
 
     def test_CheckVerticalHorizontalWin(self):
-        cfw = CFW.CheckForWin(self.horizontalwinx)
-        self.assertEqual(False, cfw.check_vertically())
+        cfw=CFW.CheckForWin(self.horizontalwinx)
+        self.assertEqual(False,cfw.check_vertically())          
 
     def test_CheckVerticalNoWin(self):
-        cfw = CFW.CheckForWin(self.verticalnowin)
-        self.assertEqual(False, cfw.check_vertically())
-
-    # Horizontal Test Cases
+        cfw=CFW.CheckForWin(self.verticalnowin)
+        self.assertEqual(False,cfw.check_vertically())        
+        
+# Horizontale Testcases
     def test_CheckHorizontalNoWin(self):
-        cfw = CFW.CheckForWin(self.horizontalnowin)
-        self.assertEqual(False, cfw.check_horizontally())
-
+        cfw=CFW.CheckForWin(self.horizontalnowin)
+        self.assertEqual(False,cfw.check_horizontally())
+        
     def test_CheckHorizontalBottomWinX(self):
-        cfw = CFW.CheckForWin(self.horizontalwinx)
-        self.assertEqual("x", cfw.check_horizontally())
+        cfw=CFW.CheckForWin(self.horizontalwinx)
+        self.assertEqual("x",cfw.check_horizontally())
 
     def test_CheckHorizontalBottomWinO(self):
-        cfw = CFW.CheckForWin(self.horizontalwino)
-        self.assertEqual("o", cfw.check_horizontally())
+        cfw=CFW.CheckForWin(self.horizontalwino)
+        self.assertEqual("o",cfw.check_horizontally())        
 
     def test_CheckHorizontalBottomDraw(self):
-        cfw = CFW.CheckForWin(self.emptygrid)
-        self.assertEqual(False, cfw.check_horizontally())
+        cfw=CFW.CheckForWin(self.emptygrid)
+        self.assertEqual(False,cfw.check_horizontally())
 
     def test_CheckHorizontalBottomDrawVerticallyX(self):
-        cfw = CFW.CheckForWin(self.verticalwinx)
-        self.assertEqual(False, cfw.check_horizontally())
-
+        cfw=CFW.CheckForWin(self.verticalwinx)
+        self.assertEqual(False,cfw.check_horizontally())
+        
     def test_CheckHorizontalBottomDrawVerticallyO(self):
-        cfw = CFW.CheckForWin(self.verticalwino)
-        self.assertEqual(False, cfw.check_horizontally())
+        cfw=CFW.CheckForWin(self.verticalwino)
+        self.assertEqual(False,cfw.check_horizontally())           
 
-# Some additional "Weird Grid" tests
+
 class WeirdGridTests(unittest.TestCase):
     def test_1(self):
-        # Just a simple test that is expected to pass
-        assert 1 == 1
+        assert 1==1
+

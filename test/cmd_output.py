@@ -14,20 +14,15 @@ __status__ = "Development"
 
 
 class CMDOutput():
-    # Statische Methode, um eine formatierte String-Darstellung des Grids zu erzeugen
     @staticmethod
     def doCMDOutput(grid):
-        outputstring = ""  # Initialisiere einen leeren String, der die formatierte Ausgabe speichern wird
-
-        # Schleife über die Reihen im Grid in umgekehrter Reihenfolge (beginnt mit der letzten Reihe)
+        outputstring=""
         for row in reversed(grid):
-            outputstring += "|"  # Füge ein senkrechtes Strichzeichen vor jeder Reihe hinzu, um die Spaltenränder darzustellen
-
-            # Schleife über jedes Coin (oder Element) in der Reihe
+            outputstring+="|"
             for coin in row:
-                outputstring += coin  # Füge den Wert des Coins zum Ausgabe-String hinzu (z.B. "x", "o" oder "0")
-                outputstring += "|"  # Füge nach jedem Coin ein senkrechtes Strichzeichen hinzu, um die Spaltenränder darzustellen
+                outputstring+=coin
+                outputstring+="|"
+                
+            outputstring+="\n"
 
-            outputstring += "\n"  # Nachdem jede Reihe verarbeitet wurde, füge einen Zeilenumbruch hinzu, um zur nächsten Reihe zu wechseln
-
-        return outputstring  # Gib den formatierten String zurück, der das Grid darstellt
+        return outputstring
