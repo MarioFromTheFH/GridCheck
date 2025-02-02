@@ -23,7 +23,6 @@ class SimpleGridTest(unittest.TestCase):
     """
     Eine Testklasse für verschiedene Gitterkonfigurationen zur Überprüfung von
     Gewinnbedingungen
-
     """
 
     def setUp(self):
