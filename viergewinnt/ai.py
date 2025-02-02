@@ -23,7 +23,7 @@ class AIMoves(Metagame):
         self.difficulty=difficulty
 
 
-    #Stolen from:https://towardsdatascience.com/beating-connect-four-with-ai-b88b220ff0f0
+    #Gestohlen von: https://towardsdatascience.com/beating-connect-four-with-ai-b88b220ff0f0
     def get_best_move(self, board , num_sims: int):
 
         # Get a list of all viable moves
@@ -49,7 +49,7 @@ class AIMoves(Metagame):
         return best_move        
         
 
-    #Stolen from https://labex.io/tutorials/python-connect-four-game-human-vs-ai-298858
+    #Gestohlen von https://labex.io/tutorials/python-connect-four-game-human-vs-ai-298858
     def getPotentialMoves(self,board, tile, lookAhead):
         if lookAhead == 0 or self.cfw.isBoardFull(board):
             '''

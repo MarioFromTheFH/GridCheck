@@ -13,7 +13,6 @@ __email__ = "s54953@edu.campus02.at"
 __status__ = "Development"
 
 import sys
-import numpy as np
 import random, copy, pygame
 import math
 from pygame.locals import *
@@ -29,7 +28,7 @@ class Game(Metagame):
     Sie erbt von der Metagame-Klasse und definiert wichtige Parameter wie die Spielfeldgröße,
     die Spielbildschirmgröße und den Schwierigkeitsgrad des Computers.
     """
-    ## Boldly stolen from: https://labex.io/tutorials/python-connect-four-game-human-vs-ai-298858
+    ## Ganz gemein gestohlen von: https://labex.io/tutorials/python-connect-four-game-human-vs-ai-298858
 
     DIFFICULTY = 2  ## Schwierigkeitsgrad, Anzahl der Züge, die der Computer berücksichtigen kann
                    ## Hier bedeutet 2, dass der Computer 7 mögliche Züge des Gegners berücksichtigt und darauf reagiert.
