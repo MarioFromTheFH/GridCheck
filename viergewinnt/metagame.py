@@ -14,53 +14,152 @@ __status__ = "Development"
 
 from test.cmd_output import CMDOutput as cmdo
 
-class Metagame():
 
-    COIN_PLAYER_1='x'
-    COIN_PLAYER_2='o'
-    FIGSET=[COIN_PLAYER_1,COIN_PLAYER_2]
-    
-    RESERVED="0"
-    
-    def create_board(self, cols,rows):
+class Metagame():
+    """
+    Eine Klasse zur Verwaltung eines 2D-Grid-basierten Spiels.
+    """
+
+    COIN_PLAYER_1 = 'x'  # Symbol für Spieler 1
+    COIN_PLAYER_2 = 'o'  # Symbol für Spieler 2
+    FIGSET = [COIN_PLAYER_1, COIN_PLAYER_2]  # Mögliche Spielfiguren
+
+    RESERVED = "0"  # Zeichen für freie Spielfelder
+
+    def create_board(self, cols, rows):
+        """
+        Erstellt ein Spielfeld mit den angegebenen Spalten und Zeilen.
+
+        Parameters
+        ----------
+        cols : int
+            Anzahl der Spalten im Spielfeld.
+        rows : int
+            Anzahl der Reihen im Spielfeld.
+
+        Returns
+        -------
+        list
+            Ein 2D-Array, das das Spielfeld darstellt.
+        """
         return [[self.RESERVED for col in range(cols)] for row in range(rows)]
 
     def is_valid_location(self, grid, col, row_count):
-        return grid[row_count-1][col] == self.RESERVED
+        """
+        Überprüft, ob eine Spalte noch Platz für einen Spielstein hat.
+
+        Parameters
+        ----------
+        grid : list
+            Das aktuelle Spielfeld als 2D-Array.
+        col : int
+            Die Spalte, die überprüft wird.
+        row_count : int
+            Die Anzahl der Reihen im Spielfeld.
+
+        Returns
+        -------
+        bool
+            True, wenn ein Stein in dieser Spalte platziert werden kann, sonst False.
+        """
+        return grid[row_count - 1][col] == self.RESERVED
 
     def isValidMove(self, grid, column):
-        ## Judge the validity of a piece's move
+        """
+        Prüft, ob ein Zug gültig ist.
 
-        if column>=len(grid):
+        Ein Zug ist ungültig, wenn:
+        - Die Spalte außerhalb des gültigen Bereichs liegt.
+        - Die Spalte bereits voll ist.
+
+        Parameters
+        ----------
+        grid : list
+            Das Spielfeld als 2D-Array.
+        column : int
+            Die Spalte, in die der Stein gesetzt werden soll.
+
+        Returns
+        -------
+        bool
+            True, wenn der Zug gültig ist, sonst False.
+        """
+        if column >= len(grid):  # Spalte ist größer als die Breite des Spielfelds
             return False
-        
-        if column < 0:
-        ## If the column is less than 0 or greater than BOARDWIDTH, or there is no empty space in the column
+
+        if column < 0:  # Spalte ist kleiner als 0
             return False
 
-        if grid[len(grid)-1][column]!=self.RESERVED:
+        if grid[len(grid) - 1][column] != self.RESERVED:  # Spalte ist bereits voll
             return False
 
-        return True    
+        return True
 
-    
-    def get_next_open_row(self,board, col, row_count):
-        cmdo.doCMDOutput(board)
-        print("Row Count:"+str(row_count))
+    def get_next_open_row(self, board, col, row_count):
+        """
+        Findet die erste verfügbare Reihe in einer bestimmten Spalte.
+
+        Parameters
+        ----------
+        board : list
+            Das Spielfeld als 2D-Array.
+        col : int
+            Die Spalte, in der nach einer freien Reihe gesucht wird.
+        row_count : int
+            Die Anzahl der Reihen im Spielfeld.
+
+        Returns
+        -------
+        int
+            Die erste verfügbare Reihe (Index) oder -1, wenn die Spalte voll ist.
+        """
+        cmdo.doCMDOutput(board)  # Externer Funktionsaufruf (nicht definiert im Code)
+        print("Row Count:" + str(row_count))
         for r in range(row_count):
             if board[r][col] == self.RESERVED:
                 return r
 
         print("Return -1")
-        return -1
-            
-    def drop_piece(self, row, col, piece):
-        self.board[row][col] = piece    
+        return -1  # Keine freien Felder in dieser Spalte
 
-    
-    def makeMove(self,board, player, column):
+    def drop_piece(self, row, col, piece):
+        """
+        Platziert einen Spielstein auf dem Spielfeld.
+
+        Parameters
+        ----------
+        row : int
+            Die Zeile, in die der Spielstein gesetzt wird.
+        col : int
+            Die Spalte, in die der Spielstein gesetzt wird.
+        piece : str
+            Der Spielstein ('x' oder 'o').
+
+        Returns
+        -------
+        None
+        """
+        self.board[row][col] = piece
+
+    def makeMove(self, board, player, column):
+        """
+        Führt einen Spielzug aus, indem ein Spielstein in eine Spalte gesetzt wird.
+
+        Parameters
+        ----------
+        board : list
+            Das aktuelle Spielfeld als 2D-Array.
+        player : str
+            Der Spielstein ('x' oder 'o').
+        column : int
+            Die Spalte, in die der Spielstein gesetzt wird.
+
+        Returns
+        -------
+        None
+        """
         lowest = self.get_next_open_row(board, column, len(board[0]))
         if lowest != -1:
-            print("col: "+str(column))
-            print("row: "+str(lowest))
-            board[column][lowest] = player
+            print("col: " + str(column))
+            print("row: " + str(lowest))
+            board[column][lowest] = player  # Setzt den Spielstein in die Spalte
