@@ -1,0 +1,17 @@
+Am Anfang des Projektes stand das Modul `check_for_win`, das sich darum kümmern sollte, _n_ Steine in einer Reihe zu finden.
+Ich habe mit dem einfachsten Fall angefangen: Vier horizontale Steine in einer Reihe. Danach folgten Tests dazu, ob es funktioniert.
+Der zweitleichteste Fall waren vier vertikale Steine, dessen Implementierung auch relativ trivial war. Hier folgten wieder eine Reihe von Tests
+Auch habe ich hier einige Edge-Cases überprüft. Bspw. was passiert, wenn einige Steine über 2 Reihen verteilt 4 Steine ergeben. Das wurde getstet und schließlich behoben.
+
+Weniger trivial waren die Implementierungen der diagonalen Steine. Glücklicherweise gibt es in Python die `zip`-Funktion mit der man zwei Zähler parallel laufen lassen kann.
+Auch hierzu wurden Tests geschrieben. Es gibt hier allerdings nur zwei Fälle: Beide Richtungen sind positiv/negativ, oder jeweils eine Richtung ist positiv oder negativ.
+
+Nachdem die Funktionalitäten für die Überprüfung der Steine abgeschlossen wurde, habe ich mich auf die Suche nach Möglichkeiten gemacht, wie man das Brett, das bisher in einer verschachtelten Liste gelaufen ist in pyGame als eine GUI laufen lassen kann.
+Hierzu gibt es im Internet einige schöne Beispiele und ich habe mich dazu entschlossen, zwei Varianten zu kombinieren. In einer Variante wurde die Oberfläche gezeichnet, in der anderen wurden dafür Grafiken verwendet.
+Ich wollte das Brett gezeichnet haben, damit es beliebig groß sein konnte und die Steine als Grafik, damit es schöner aussieht. 
+
+Das habe ich dann einfach in die main.py gepackt.
+
+Des Weiteren folgten einige Überlegungen, wie man eine KI einbinden kann. Auch dafür hatte das Internet eine schöne Antwort parat. Diese KI kann einfach mittels einer Monte-Carlo-Simulation gebastelt werden.
+Ich habe diese KI dann in eine eigene Klasse gebaut. Dabei ist mir aufgefallen, dass sich sowohl die KI, als auch das Spiel selbst einige Funktionalitäten teilen.
+Deswegen habe ich die eigentlich abstrakte Klasse `metagame` entschieden, die ich über alles drüberstülpe.
