@@ -48,8 +48,6 @@ class Game(Metagame):
 
     WIN_WAIT_TIME = 10000  ## Wartezeit nach einem Gewinn in Millisekunden (10 Sekunden)
 
-
-class Game:
     def __init__(self, rows, cols, wincnt, computer_game):
         """
         Initialisiert das Spiel mit den angegebenen Parametern.
