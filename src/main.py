@@ -19,7 +19,7 @@ from pygame.locals import *
 from viergewinnt.check_for_win import CheckForWin
 from viergewinnt.ai import AIMoves
 from viergewinnt.metagame import Metagame
-from test.cmd_output import CMDOutput as cmdo
+from cmd_output import CMDOutput as cmdo
 
 class Game(Metagame):
     """

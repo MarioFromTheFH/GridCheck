@@ -25,3 +25,9 @@ python3.10 main.py 4 3 3 0
 ```
 pygame==2.1.2
 ```
+
+## Tests
+Zum Testen ruft man aus dem Hauptverzeichnis folgenden Befehl auf:
+```
+python3 -m test.unittests
+```

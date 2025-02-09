@@ -12,9 +12,8 @@ __maintainer__ = "Mario Schwaiger"
 __email__ = "s54953@edu.campus02.at"
 __status__ = "Development"
 
-import unittest
-from .cmd_output import CMDOutput
-import viergewinnt.check_for_win as CFW
+from src.cmd_output import CMDOutput
+from src.viergewinnt import check_for_win as CFW
 
 import unittest
 

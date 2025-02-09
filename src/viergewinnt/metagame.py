@@ -12,7 +12,7 @@ __maintainer__ = "Mario Schwaiger"
 __email__ = "s54953@edu.campus02.at"
 __status__ = "Development"
 
-from test.cmd_output import CMDOutput as cmdo
+from cmd_output import CMDOutput as cmdo
 
 
 class Metagame():

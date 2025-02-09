@@ -12,23 +12,23 @@ __maintainer__ = "Mario Schwaiger"
 __email__ = "s54953@edu.campus02.at"
 __status__ = "Development"
 
-from test import test_grids
 #import EnhancedTestDeco as etd
 #from ETDConstants import TESTINGCOLORSCOLORS
 #import ETDConstants as ehconst
 
-import unittest
 import os.path
 from os import path
 import os
 import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
+import unittest
 
 #suite.addTests(loader.loadTestsFromModule(WeirdGridTests))
 
 import unittest
 import sys
-import test_grids  # Importiert das Testmodul, das die Testfälle enthält
+import test.test_grids  # Importiert das Testmodul, das die Testfälle enthält
 
 if __name__ == '__main__':
     """
@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     # Erstellt einen TestLoader zum Laden der Testfälle aus `test_grids`
     loader = unittest.TestLoader()
-    suite.addTests(loader.loadTestsFromModule(test_grids))
+    suite.addTests(loader.loadTestsFromModule(test.test_grids))
 
     # Erstellt einen TestRunner zur Ausführung der Tests mit detaillierter Ausgabe
     runner = unittest.TextTestRunner(verbosity=2)
