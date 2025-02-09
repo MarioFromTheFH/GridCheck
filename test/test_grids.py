@@ -14,6 +14,7 @@ __status__ = "Development"
 
 from src.cmd_output import CMDOutput
 from src.viergewinnt import check_for_win as CFW
+from src.viergewinnt.metagame import Metagame
 
 import unittest
 
@@ -34,7 +35,7 @@ class SimpleGridTest(unittest.TestCase):
         rows, cols = (6, 7)  # Definiert die Standardgröße des Spielfeldes (6 Reihen, 7 Spalten)
 
         # Erzeugt ein leeres Spielfeld, das mit `RESERVED` gefüllt ist
-        self.emptygrid = [[self.RESERVED for row in range(rows)] for col in range(cols)]
+        self.emptygrid = [[Metagame.RESERVED for row in range(rows)] for col in range(cols)]
 
         # Testfälle für diagonale Gewinnmöglichkeiten mit drei gesetzten Steinen
         self.diagonal1_3 = [
@@ -153,75 +154,49 @@ class SimpleGridTest(unittest.TestCase):
             ["o", "0", "0", "0", "0", "0", "0"]]
 
 
-import unittest
-
-
-class SimpleGridTest(unittest.TestCase):
-    """
-    Testklasse für das Überprüfen von Gewinnbedingungen in einem Raster-basierten Spiel.
-
-    Diese Klasse enthält verschiedene Testfälle für horizontale, vertikale und diagonale
-    Gewinnbedingungen sowie für unentschiedene Spielsituationen.
-    """
-
-    def setUp(self):
-        """
-        Initialisiert Testgitter für verschiedene Spielszenarien.
-
-        - Enthält Testfälle für horizontale, vertikale und diagonale Gewinnbedingungen.
-        - Erstellt auch Spielfelder, die keine Gewinnbedingung erfüllen.
-        """
-        rows, cols = (6, 7)  # Standardgröße des Spielfelds: 6 Reihen, 7 Spalten
-
-        # Erzeugt ein leeres Spielfeld
-        self.emptygrid = [[self.RESERVED for row in range(rows)] for col in range(cols)]
-
-        # Initialisiert verschiedene Testgitter (Details siehe vorherige Kommentare)
-        # ...
-
     # ========================
     # Tests für diagonale Gewinne
     # ========================
 
     def test_diag1_only3(self):
         """ Testet, dass drei diagonale Steine keinen Gewinn auslösen. """
-        cfw = CFW.CheckForWin(self.diagonal1_3)
-        self.assertEqual(False, cfw.check_diagonally())
+        cfw = CFW.CheckForWin()
+        self.assertEqual(False, cfw.check_diagonally(self.diagonal1_3))
 
     def test_diag2_only3(self):
         """ Testet, dass drei diagonale Steine keinen Gewinn auslösen. """
-        cfw = CFW.CheckForWin(self.diagonal2_3)
-        self.assertEqual(False, cfw.check_diagonally())
+        cfw = CFW.CheckForWin()
+        self.assertEqual(False, cfw.check_diagonally(self.diagonal2_3))
 
     def test_diag3_only3(self):
         """ Testet, dass drei diagonale Steine keinen Gewinn auslösen. """
-        cfw = CFW.CheckForWin(self.diagonal3_3)
-        self.assertEqual(False, cfw.check_diagonally())
+        cfw = CFW.CheckForWin()
+        self.assertEqual(False, cfw.check_diagonally(self.diagonal3_3))
 
     def test_diag4_only3(self):
         """ Testet, dass drei diagonale Steine keinen Gewinn auslösen. """
-        cfw = CFW.CheckForWin(self.diagonal4_3)
-        self.assertEqual(False, cfw.check_diagonally())
+        cfw = CFW.CheckForWin()
+        self.assertEqual(False, cfw.check_diagonally(self.diagonal4_3))
 
     def test_diag1(self):
         """ Testet, dass vier diagonale 'x'-Steine einen Gewinn auslösen. """
-        cfw = CFW.CheckForWin(self.diagonal1)
-        self.assertEqual("x", cfw.check_diagonally())
+        cfw = CFW.CheckForWin()
+        self.assertEqual("x", cfw.check_diagonally(self.diagonal1))
 
     def test_diag2(self):
         """ Testet, dass vier diagonale 'x'-Steine einen Gewinn auslösen. """
-        cfw = CFW.CheckForWin(self.diagonal2)
-        self.assertEqual("x", cfw.check_diagonally())
+        cfw = CFW.CheckForWin()
+        self.assertEqual("x", cfw.check_diagonally(self.diagonal2))
 
     def test_diag3(self):
         """ Testet, dass vier diagonale 'x'-Steine einen Gewinn auslösen. """
-        cfw = CFW.CheckForWin(self.diagonal3)
-        self.assertEqual("x", cfw.check_diagonally())
+        cfw = CFW.CheckForWin()
+        self.assertEqual("x", cfw.check_diagonally(self.diagonal3))
 
     def test_diag4(self):
         """ Testet, dass vier diagonale 'x'-Steine einen Gewinn auslösen. """
-        cfw = CFW.CheckForWin(self.diagonal4)
-        self.assertEqual("x", cfw.check_diagonally())
+        cfw = CFW.CheckForWin()
+        self.assertEqual("x", cfw.check_diagonally(self.diagonal4))
 
     # ========================
     # Tests für vertikale Gewinne
@@ -229,28 +204,28 @@ class SimpleGridTest(unittest.TestCase):
 
     def test_CheckVerticalLeftWinX(self):
         """ Testet, dass vier vertikale 'x'-Steine einen Gewinn auslösen. """
-        cfw = CFW.CheckForWin(self.verticalwinx)
-        self.assertEqual("x", cfw.check_vertically())
+        cfw = CFW.CheckForWin()
+        self.assertEqual("x", cfw.check_vertically(self.verticalwinx))
 
     def test_CheckVerticalLeftWinO(self):
         """ Testet, dass vier vertikale 'o'-Steine einen Gewinn auslösen. """
-        cfw = CFW.CheckForWin(self.verticalwino)
-        self.assertEqual("o", cfw.check_vertically())
+        cfw = CFW.CheckForWin()
+        self.assertEqual("o", cfw.check_vertically(self.verticalwino))
 
     def test_CheckVerticalDraw(self):
         """ Testet, dass ein leeres Spielfeld keinen vertikalen Gewinn auslöst. """
-        cfw = CFW.CheckForWin(self.emptygrid)
-        self.assertEqual(False, cfw.check_vertically())
+        cfw = CFW.CheckForWin()
+        self.assertEqual(False, cfw.check_vertically(self.emptygrid))
 
     def test_CheckVerticalHorizontalWin(self):
         """ Testet, dass eine horizontale Gewinnreihe keinen vertikalen Gewinn auslöst. """
-        cfw = CFW.CheckForWin(self.horizontalwinx)
-        self.assertEqual(False, cfw.check_vertically())
+        cfw = CFW.CheckForWin()
+        self.assertEqual(False, cfw.check_vertically(self.horizontalwinx))
 
     def test_CheckVerticalNoWin(self):
         """ Testet, dass ein unvollständiges vertikales Muster keinen Gewinn auslöst. """
-        cfw = CFW.CheckForWin(self.verticalnowin)
-        self.assertEqual(False, cfw.check_vertically())
+        cfw = CFW.CheckForWin()
+        self.assertEqual(False, cfw.check_vertically(self.verticalnowin))
 
     # ========================
     # Tests für horizontale Gewinne
@@ -258,33 +233,33 @@ class SimpleGridTest(unittest.TestCase):
 
     def test_CheckHorizontalNoWin(self):
         """ Testet, dass eine unvollständige horizontale Reihe keinen Gewinn auslöst. """
-        cfw = CFW.CheckForWin(self.horizontalnowin)
-        self.assertEqual(False, cfw.check_horizontally())
+        cfw = CFW.CheckForWin()
+        self.assertEqual(False, cfw.check_horizontally(self.horizontalnowin))
 
     def test_CheckHorizontalBottomWinX(self):
         """ Testet, dass eine vollständige horizontale 'x'-Reihe einen Gewinn auslöst. """
-        cfw = CFW.CheckForWin(self.horizontalwinx)
-        self.assertEqual("x", cfw.check_horizontally())
+        cfw = CFW.CheckForWin()
+        self.assertEqual("x", cfw.check_horizontally(self.horizontalwinx))
 
     def test_CheckHorizontalBottomWinO(self):
         """ Testet, dass eine vollständige horizontale 'o'-Reihe einen Gewinn auslöst. """
-        cfw = CFW.CheckForWin(self.horizontalwino)
-        self.assertEqual("o", cfw.check_horizontally())
+        cfw = CFW.CheckForWin()
+        self.assertEqual("o", cfw.check_horizontally(self.horizontalwino))
 
     def test_CheckHorizontalBottomDraw(self):
         """ Testet, dass ein leeres Spielfeld keinen horizontalen Gewinn auslöst. """
-        cfw = CFW.CheckForWin(self.emptygrid)
-        self.assertEqual(False, cfw.check_horizontally())
+        cfw = CFW.CheckForWin()
+        self.assertEqual(False, cfw.check_horizontally(self.emptygrid))
 
     def test_CheckHorizontalBottomDrawVerticallyX(self):
         """ Testet, dass ein vertikaler Gewinn keinen horizontalen Gewinn auslöst. """
-        cfw = CFW.CheckForWin(self.verticalwinx)
-        self.assertEqual(False, cfw.check_horizontally())
+        cfw = CFW.CheckForWin()
+        self.assertEqual(False, cfw.check_horizontally(self.verticalwinx))
 
     def test_CheckHorizontalBottomDrawVerticallyO(self):
         """ Testet, dass ein vertikaler Gewinn keinen horizontalen Gewinn auslöst. """
-        cfw = CFW.CheckForWin(self.verticalwino)
-        self.assertEqual(False, cfw.check_horizontally())
+        cfw = CFW.CheckForWin()
+        self.assertEqual(False, cfw.check_horizontally(self.verticalwino))
 
 
 # ========================
